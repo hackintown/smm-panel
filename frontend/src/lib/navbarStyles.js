@@ -11,7 +11,7 @@ export const navbarListStyles = cva('hidden md:flex gap-4', {
   defaultVariants: {},
 });
 
-export const navbarItemStyles = cva('text-gray-800 hover:text-primary-color transition duration-300', {
+export const navbarItemStyles = cva('text-white dark:text-gray-800 hover:text-primary-color transition duration-300', {
   variants: {},
   defaultVariants: {},
 });

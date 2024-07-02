@@ -3,7 +3,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -64,11 +63,16 @@ body {
     @apply bg-background text-foreground;
   }
 }
-
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 @layer utilities {
   /* Admin_login_Page_bg */
   .login-bg {
-    width: 100%;
+    width: 100vw;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;

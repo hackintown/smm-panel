@@ -1,42 +1,29 @@
-const Admin = require("../models/adminModel");
-const generateToken = require("../utils/generateToken");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const Admin = require("../models/Admin");
 
-// @desc    Auth admin & get token
-// @route   POST /api/admin/login
-// @access  Public
-const login = async (req, res) => {
+const loginAdmin = async (req, res) => {
   const { username, password } = req.body;
-  const admin = await Admin.findOne({ username });
+  try {
+    const admin = await Admin.findOne({ username });
+    if (!admin) {
+      return res.status(400).json({ msg: "Invalid credentials" });
+    }
 
-  if (admin && (await bcrypt.compare(password, admin.password))) {
-    res.json({
-      _id: admin._id,
-      username: admin.username,
-      token: generateToken(admin._id),
+    const isMatch = await bcrypt.compare(password, admin.password);
+    if (!isMatch) {
+      return res.status(400).json({ msg: "Invalid credentials" });
+    }
+
+    const token = jwt.sign({ adminId: admin._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
     });
-  } else {
-    res.status(401).json({ message: "Invalid username or password" });
+
+    res.json({ token });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
   }
 };
 
-// @desc    Update admin password
-// @route   PUT /api/admin/update-password
-// @access  Private
-
-const updatePassword = async (req, res) => {
-  const { newPassword } = req.body;
-  const admin = await Admin.findById(req.user._id);
-
-  if (admin) {
-    admin.password = bcrypt.hashSync(newPassword, 10); // Hash the new password
-    await admin.save();
-    res.json({
-      message: "Password updated successfully, please log in again.",
-    });
-  } else {
-    res.status(404).json({ message: "Admin not found" });
-  }
-};
-
-module.exports = { login, updatePassword };
+module.exports = { loginAdmin };
