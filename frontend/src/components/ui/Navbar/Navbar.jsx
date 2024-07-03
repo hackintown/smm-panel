@@ -36,9 +36,7 @@ const Navbar = () => {
 
   return (
     <NavigationMenu.Root className={navbarRootStyles()}>
-      <div className="text-white dark:text-gray-800 text-xl font-semibold">
-        SMM PANEL
-      </div>
+      <div className="text-xl font-semibold">SMM PANEL</div>
       <NavigationMenu.List className={navbarListStyles()}>
         <NavigationMenu.Item>
           <Link to="/" className={navbarItemStyles()}>
@@ -62,10 +60,7 @@ const Navbar = () => {
         </NavigationMenu.Item>
       </NavigationMenu.List>
       <div className="flex items-center gap-4">
-        <button
-          onClick={toggleDarkMode}
-          className="text-white dark:text-gray-800"
-        >
+        <button onClick={toggleDarkMode}>
           {isDarkMode ? (
             <SunIcon className="w-6 h-6" />
           ) : (

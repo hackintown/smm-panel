@@ -6,7 +6,7 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
+    --foreground: 240 10% 3.9%; 
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
@@ -51,9 +51,18 @@
     --font-family: "Poppins", sans-serif;
   }
 }
-
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html,
 body {
   font-family: var(--font-family);
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Prevent horizontal scrolling */
+  width: 100%;
 }
 @layer base {
   * {
@@ -61,38 +70,5 @@ body {
   }
   body {
     @apply bg-background text-foreground;
-  }
-}
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-@layer utilities {
-  /* Admin_login_Page_bg */
-  .login-bg {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #000000;
-    --gap: 5em;
-    --line: 1px;
-    --color: rgba(255, 255, 255, 0.2);
-
-    background-image: linear-gradient(
-        -90deg,
-        transparent calc(var(--gap) - var(--line)),
-        var(--color) calc(var(--gap) - var(--line) + 1px),
-        var(--color) var(--gap)
-      ),
-      linear-gradient(
-        0deg,
-        transparent calc(var(--gap) - var(--line)),
-        var(--color) calc(var(--gap) - var(--line) + 1px),
-        var(--color) var(--gap)
-      );
-    background-size: var(--gap) var(--gap);
   }
 }

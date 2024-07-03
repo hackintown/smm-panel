@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const Admin = require("../models/Admin");
+const Admin = require("../models/adminModel");
 
 const loginAdmin = async (req, res) => {
   const { username, password } = req.body;
@@ -26,4 +26,19 @@ const loginAdmin = async (req, res) => {
   }
 };
 
-module.exports = { loginAdmin };
+const resetAdminPassword = async (req, res) => {
+  const { adminId } = req.admin;
+  const { newPassword } = req.body;
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    await Admin.findByIdAndUpdate(adminId, { password: hashedPassword });
+
+    res.json({ msg: "Password reset successful" });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+};
+module.exports = { loginAdmin, resetAdminPassword };

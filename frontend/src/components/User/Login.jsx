@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser, clearError } from "../../features/authSlice";
 import { Button } from "../ui/Button";
+import { Link } from "react-router-dom";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,39 +16,85 @@ const Login = () => {
 
   return (
     <div className="login-bg">
-      <div className="container max-w-[800px]">
-        <div className="bg-white p-4 rounded-sm">
-          <h2>Login</h2>
-          {error && <p style={{ color: "red" }}>{error}</p>}
-          <form onSubmit={handleSubmit}>
-            <div className="">
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                autoComplete="off"
-                onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                autoComplete="new-password"
-                onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-              <Button
-                variant="default"
-                size="lg"
-                type="submit"
-                disabled={loading}
-                 className="my-2"
-              >
-                {loading ? "Logging in..." : "Login"}
-              </Button>
+      <div className="relative w-full h-full">
+        <img
+          className="w-full"
+          src="https://e1.pxfuel.com/desktop-wallpaper/581/154/desktop-wallpaper-backgrounds-for-login-page-login-page.jpg"
+          alt="login-bg"
+        />
+      </div>
+      <div className="absolute top-52 w-full h-full">
+        <div className="container max-w-[1200px]">
+          <div className="flex bg-white items-center rounded-2xl overflow-hidden">
+            <div className="left-content flex-1">
+              <img src="https://static.vecteezy.com/system/resources/thumbnails/036/255/337/small_2x/sign-in-page-flat-design-concept-illustration-icon-account-login-user-login-abstract-metaphor-can-use-for-landing-page-mobile-app-ui-posters-free-vector.jpg" />
             </div>
-          </form>
+
+            <div className="right-content flex-1">
+              <div className="flex flex-col items-center justify-center">
+                <div className="w-full max-w-md bg-card rounded-lg p-6 shadow-sm border">
+                  <h2 className="text-2xl text-center text-foreground font-semibold mb-4">
+                    Login
+                  </h2>
+                  <form className="flex flex-col" onSubmit={handleSubmit}>
+                    <input
+                      placeholder="Email address"
+                      className="text-foreground border-0 bg-input rounded-md p-2 mb-4 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
+                      type="email"
+                      value={email}
+                      autoComplete="off"
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                    <input
+                      placeholder="Password"
+                      className="text-foreground border-0 bg-input rounded-md p-2 mb-4 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
+                      type="password"
+                      value={password}
+                      autoComplete="new-password"
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <div className="flex items-center justify-between flex-wrap">
+                      <label
+                        className="text-sm text-foreground cursor-pointer"
+                        htmlFor="remember-me"
+                      >
+                        <input
+                          className="text-foreground bg-background mx-1"
+                          id="remember-me"
+                          type="checkbox"
+                        />
+                        Remember me
+                      </label>
+                      <Link
+                        className="text-sm text-blue-500 hover:underline mb-0.5"
+                        to="/login"
+                      >
+                        Forgot password?
+                      </Link>
+                      <p className="text-foreground text-sm mt-4">
+                        Don't have an account?
+                        <Link
+                          className="text-sm text-blue-500 -200 hover:underline mt-4"
+                          to="/register"
+                        >
+                          Signup
+                        </Link>
+                      </p>
+                    </div>
+                    <Button
+                      varient="default"
+                      size="lg"
+                      className="bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-bold py-2 px-4 rounded-md mt-4 hover:bg-indigo-600 hover:to-blue-600 transition ease-in-out duration-150"
+                      type="submit"
+                    >
+                      {loading ? "Loading" : "Login"}
+                    </Button>
+                  </form>
+                  {error && <p style={{ color: "red" }}>{error}</p>}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

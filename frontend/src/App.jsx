@@ -27,20 +27,26 @@ function App() {
     }
   }, [dispatch, token, user]);
 
-  // Define private routes for authenticated users and admin
-  const userRoutes = (
-    <>
-      <Route path="/user/dashboard" element={<UserDashboard />} />
+  // Define private route components for authenticated users and admin
+  const UserRoutes = () =>
+    user ? (
+      <>
+        <Route path="/user/dashboard" element={<UserDashboard />} />
+        <Route path="*" element={<Navigate to="/user/dashboard" replace />} />
+      </>
+    ) : (
       <Navigate to="/login" replace />
-    </>
-  );
+    );
 
-  const adminRoutes = (
-    <>
-      <Route path="/admin/dashboard" element={<AdminDashboard />} />
+  const AdminRoutes = () =>
+    admin ? (
+      <>
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
+      </>
+    ) : (
       <Navigate to="/admin" replace />
-    </>
-  );
+    );
 
   return (
     <>
@@ -51,9 +57,9 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          {user ? userRoutes : null}
-          {admin ? adminRoutes : null}
           <Route path="/admin" element={<AdminLogin />} />
+          <Route path="/user/*" element={<UserRoutes />} />
+          <Route path="/admin/*" element={<AdminRoutes />} />
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       )}
