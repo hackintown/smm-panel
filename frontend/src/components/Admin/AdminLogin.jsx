@@ -8,14 +8,15 @@ const AdminLogin = () => {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { token, loading, error } = useSelector((state) => state.auth);
+  const { loading, error } = useSelector((state) => state.auth);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(loginAdmin({ username, password }));
-    if (token) {
-      navigate("/admin/dashboard");
-    }
+    dispatch(loginAdmin({ username, password })).then((action) => {
+      if (loginAdmin.fulfilled.match(action)) {
+        navigate("/admin/dashboard");
+      }
+    });
   };
 
   return (
@@ -94,7 +95,7 @@ const AdminLogin = () => {
                       {loading ? "Loading" : "Login"}
                     </Button>
                   </form>
-                  {error && <p style={{ color: "red" }}>{error}</p>}
+                  {error && <p style={{ color: "red" }}>{error.message}</p>}
                 </div>
               </div>
             </div>

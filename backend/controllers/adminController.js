@@ -19,7 +19,7 @@ const loginAdmin = async (req, res) => {
       expiresIn: "1h",
     });
 
-    res.json({ token });
+    res.json({ token, admin: { id: admin._id, username: admin.username } });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
@@ -30,9 +30,7 @@ const getAdmin = async (req, res) => {
   try {
     const admin = await Admin.findById(req.user.id).select("-password");
     if (!admin) {
-      return res.status(404).json({
-        msg: "Admin Not Found",
-      });
+      return res.status(404).json({ msg: "Admin Not Found" });
     }
     res.json(admin);
   } catch (err) {
@@ -42,7 +40,7 @@ const getAdmin = async (req, res) => {
 };
 
 const resetAdminPassword = async (req, res) => {
-  const { adminId } = req.admin;
+  const { adminId } = req.user;
   const { newPassword } = req.body;
   try {
     const salt = await bcrypt.genSalt(10);
@@ -56,4 +54,5 @@ const resetAdminPassword = async (req, res) => {
     res.status(500).send("Server error");
   }
 };
+
 module.exports = { loginAdmin, resetAdminPassword, getAdmin };

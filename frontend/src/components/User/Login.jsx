@@ -1,17 +1,29 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser, clearError } from "../../features/authSlice";
+import { loginUser } from "../../features/authSlice";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../ui/Button";
-import { Link } from "react-router-dom";
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
   const { loading, error } = useSelector((state) => state.auth);
 
-  const handleSubmit = async (e) => {
+  const { email, password } = formData;
+
+  const onChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const onSubmit = async (e) => {
     e.preventDefault();
-    dispatch(loginUser({ email, password }));
+    const result = await dispatch(loginUser(formData));
+    if (result.meta.requestStatus === "fulfilled") {
+      navigate("/dashboard");
+    }
   };
 
   return (
@@ -36,22 +48,26 @@ const Login = () => {
                   <h2 className="text-2xl text-center text-foreground font-semibold mb-4">
                     Login
                   </h2>
-                  <form className="flex flex-col" onSubmit={handleSubmit}>
+                  <form className="flex flex-col" onSubmit={onSubmit}>
                     <input
-                      placeholder="Email address"
+                      placeholder="email"
                       className="text-foreground border-0 bg-input rounded-md p-2 mb-4 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
-                      type="email"
+                      type="text"
+                      id="email"
+                      name="email"
                       value={email}
-                      autoComplete="off"
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={onChange}
+                      required
                     />
                     <input
                       placeholder="Password"
                       className="text-foreground border-0 bg-input rounded-md p-2 mb-4 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
                       type="password"
+                      id="password"
+                      name="password"
                       value={password}
-                      autoComplete="new-password"
-                      onChange={(e) => setPassword(e.target.value)}
+                      onChange={onChange}
+                      required
                     />
                     <div className="flex items-center justify-between flex-wrap">
                       <label
@@ -90,7 +106,7 @@ const Login = () => {
                       {loading ? "Loading" : "Login"}
                     </Button>
                   </form>
-                  {error && <p style={{ color: "red" }}>{error}</p>}
+                  {error && <p style={{ color: "red" }}>{error.message}</p>}
                 </div>
               </div>
             </div>

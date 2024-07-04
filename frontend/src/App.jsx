@@ -1,9 +1,9 @@
-import { useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
+  Outlet,
 } from "react-router-dom";
 import Navbar from "./components/ui/Navbar/Navbar";
 import UserDashboard from "./pages/UserDashboard";
@@ -11,42 +11,41 @@ import AdminDashboard from "./pages/AdminDashboard";
 import Login from "./components/User/Login";
 import Register from "./components/User/Register";
 import AdminLogin from "./components/Admin/AdminLogin";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchUserProfile } from "./features/authSlice";
+import { useSelector } from "react-redux";
+// import { authSlice } from './features/authSlice';
 
 function App() {
-  const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-  const admin = useSelector((state) => state.auth.admin);
-  const token = useSelector((state) => state.auth.token);
+  const role = useSelector((state) => state.auth.role);
   const loading = useSelector((state) => state.auth.loading);
 
-  useEffect(() => {
-    if (token && !user) {
-      dispatch(fetchUserProfile());
-    }
-  }, [dispatch, token, user]);
-
   // Define private route components for authenticated users and admin
-  const UserRoutes = () =>
-    user ? (
-      <>
-        <Route path="/user/dashboard" element={<UserDashboard />} />
-        <Route path="*" element={<Navigate to="/user/dashboard" replace />} />
-      </>
-    ) : (
-      <Navigate to="/login" replace />
+  const UserRoutes = () => {
+    if (!user || role !== "user") {
+      return <Navigate to="/login" replace />;
+    }
+    return (
+      <Routes>
+        <Route path="dashboard" element={<UserDashboard />} />
+        <Route path="*" element={<Navigate to="dashboard" replace />} />
+      </Routes>
     );
+  };
 
-  const AdminRoutes = () =>
-    admin ? (
-      <>
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
-      </>
-    ) : (
-      <Navigate to="/admin" replace />
+  const AdminRoutes = () => {
+    if (!user || role !== "admin") {
+      return <Navigate to="/admin" replace />;
+    }
+    return (
+      <Routes>
+        <Route path="dashboard" element={<AdminDashboard />} />
+        <Route path="*" element={<Navigate to="dashboard" replace />} />
+      </Routes>
     );
+  };
+
+  console.log("Current user:", user);
+  console.log("Current role:", role);
 
   return (
     <>
@@ -58,8 +57,12 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/admin" element={<AdminLogin />} />
-          <Route path="/user/*" element={<UserRoutes />} />
-          <Route path="/admin/*" element={<AdminRoutes />} />
+          <Route path="/user" element={<UserRoutes />}>
+            <Route path="*" element={<Outlet />} />
+          </Route>
+          <Route path="/admin" element={<AdminRoutes />}>
+            <Route path="*" element={<Outlet />} />
+          </Route>
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       )}
