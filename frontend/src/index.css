@@ -60,8 +60,7 @@ html,
 body {
   font-family: var(--font-family);
   margin: 0;
-  padding: 0;
-  overflow: hidden; /* Prevent horizontal scrolling */
+  padding: 0;/* Prevent horizontal scrolling */
   width: 100%;
 }
 @layer base {

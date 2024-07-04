@@ -26,6 +26,21 @@ const loginAdmin = async (req, res) => {
   }
 };
 
+const getAdmin = async (req, res) => {
+  try {
+    const admin = await Admin.findById(req.user.id).select("-password");
+    if (!admin) {
+      return res.status(404).json({
+        msg: "Admin Not Found",
+      });
+    }
+    res.json(admin);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+};
+
 const resetAdminPassword = async (req, res) => {
   const { adminId } = req.admin;
   const { newPassword } = req.body;
@@ -41,4 +56,4 @@ const resetAdminPassword = async (req, res) => {
     res.status(500).send("Server error");
   }
 };
-module.exports = { loginAdmin, resetAdminPassword };
+module.exports = { loginAdmin, resetAdminPassword, getAdmin };

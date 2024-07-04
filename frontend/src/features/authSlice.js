@@ -6,17 +6,22 @@ const apiUrl = config.apiBaseUrl;
 const setAuthToken = (token) => {
   if (token) {
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    axios.defaults.headers.common["Content-Type"] = "application/json"; // Set Content-Type for JSON
     localStorage.setItem("token", token);
   } else {
     delete axios.defaults.headers.common["Authorization"];
+    delete axios.defaults.headers.common["Content-Type"]; // Clear Content-Type if no token
     localStorage.removeItem("token");
   }
 };
+// Log Axios default headers to verify Authorization header
+console.log("Axios Default Headers:", axios.defaults.headers.common);
 
+// On application start, set the token if it exists in localStorage
 // On application start, set the token if it exists in localStorage
 const token = localStorage.getItem("token");
 if (token) {
-  setAuthToken(token);
+  setAuthToken(token); // Set token in Axios headers
 }
 
 // Thunks
@@ -52,13 +57,19 @@ export const loginAdmin = createAsyncThunk(
   "auth/loginAdmin",
   async (adminData, thunkAPI) => {
     try {
+      console.log("Login Admin Data:", adminData); // Log adminData being sent
       const response = await axios.post(
         `${apiUrl}/api/auth/admin/login`,
         adminData
       );
+      // Set token in local storage and axios headers
+      localStorage.setItem("token", response.data.token);
+      console.log("Login Admin Response:", response.data); // Log response data
       setAuthToken(response.data.token);
+      console.log("Axios Default Headers:", axios.defaults.headers.common); // Log Axios headers
       return response.data;
     } catch (error) {
+      console.error("Login Error:", error.response?.data || error.message); // Log error
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
   }

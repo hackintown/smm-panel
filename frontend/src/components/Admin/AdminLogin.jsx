@@ -8,12 +8,14 @@ const AdminLogin = () => {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error } = useSelector((state) => state.auth);
+  const { token, loading, error } = useSelector((state) => state.auth);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(loginAdmin({ username, password }));
-    navigate("/admin/dashboard");
+    if (token) {
+      navigate("/admin/dashboard");
+    }
   };
 
   return (
