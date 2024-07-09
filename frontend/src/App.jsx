@@ -4,6 +4,7 @@ import {
   Route,
   Navigate,
   Outlet,
+  useLocation,
 } from "react-router-dom";
 import Navbar from "./components/ui/Navbar/Navbar";
 import UserDashboard from "./pages/UserDashboard";
@@ -18,6 +19,7 @@ function App() {
   const user = useSelector((state) => state.auth.user);
   const role = useSelector((state) => state.auth.role);
   const loading = useSelector((state) => state.auth.loading);
+  const location = useLocation();
 
   // Define private route components for authenticated users and admin
   const UserRoutes = () => {
@@ -49,18 +51,17 @@ function App() {
 
   return (
     <>
-      <Navbar />
+     {location.pathname.startsWith('/admin') ? null : <Navbar />}
       {loading ? (
         <p>Loading...</p>
       ) : (
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/admin" element={<AdminLogin />} />
-          <Route path="/user" element={<UserRoutes />}>
+          <Route path="/admin/*" element={<AdminRoutes />}>
             <Route path="*" element={<Outlet />} />
           </Route>
-          <Route path="/admin" element={<AdminRoutes />}>
+          <Route path="/user/*" element={<UserRoutes />}>
             <Route path="*" element={<Outlet />} />
           </Route>
           <Route path="*" element={<Navigate to="/login" replace />} />

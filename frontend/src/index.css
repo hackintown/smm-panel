@@ -6,7 +6,7 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%; 
+    --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
@@ -60,7 +60,7 @@ html,
 body {
   font-family: var(--font-family);
   margin: 0;
-  padding: 0;/* Prevent horizontal scrolling */
+  padding: 0; /* Prevent horizontal scrolling */
   width: 100%;
 }
 @layer base {
@@ -70,4 +70,7 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+.container {
+  max-width: 1240px;
 }

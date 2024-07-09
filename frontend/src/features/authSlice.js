@@ -6,13 +6,22 @@ const apiUrl = config.apiBaseUrl;
 const setAuthToken = (token) => {
   if (token) {
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    axios.defaults.headers.common["Content-Type"] = "application/json";
     localStorage.setItem("token", token);
   } else {
     delete axios.defaults.headers.common["Authorization"];
-    delete axios.defaults.headers.common["Content-Type"];
     localStorage.removeItem("token");
   }
+};
+
+const getInitialAuthState = () => {
+  const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user"));
+  const role = localStorage.getItem("role");
+  if (token) {
+    setAuthToken(token);
+    return { token, user, role };
+  }
+  return { token: null, user: null, role: null };
 };
 
 const token = localStorage.getItem("token");
@@ -41,6 +50,8 @@ export const loginUser = createAsyncThunk(
     try {
       const response = await axios.post(`${apiUrl}/api/auth/login`, userData);
       setAuthToken(response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+      localStorage.setItem("role", "user");
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
@@ -57,6 +68,8 @@ export const loginAdmin = createAsyncThunk(
         adminData
       );
       setAuthToken(response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.admin));
+      localStorage.setItem("role", "admin");
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
@@ -64,16 +77,10 @@ export const loginAdmin = createAsyncThunk(
   }
 );
 
-export const logout = createAsyncThunk("auth/logout", async () => {
-  setAuthToken(null);
-});
-
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    token: token || null,
-    user: null,
-    role: null, // role can be 'user' or 'admin'
+    ...getInitialAuthState(),
     loading: false,
     error: null,
   },
@@ -100,7 +107,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = action.payload.user;
         state.token = action.payload.token;
-        state.role = 'user';
+        state.role = "user";
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
@@ -114,16 +121,11 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = action.payload.admin;
         state.token = action.payload.token;
-        state.role = 'admin';
+        state.role = "admin";
       })
       .addCase(loginAdmin.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      })
-      .addCase(logout.fulfilled, (state) => {
-        state.token = null;
-        state.user = null;
-        state.role = null;
       });
   },
 });

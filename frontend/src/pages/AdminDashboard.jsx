@@ -1,11 +1,14 @@
-import React from 'react'
+import React from "react";
+import Content from "../components/Admin/Content";
+import AdminNavbar from "../components/Admin/AdminNavbar";
 
 const AdminDashboard = () => {
   return (
     <div>
-      <h1>Hi I am Admin Dashboard</h1>
+      <AdminNavbar />
+      <Content />
     </div>
-  )
-}
+  );
+};
 
-export default AdminDashboard
+export default AdminDashboard;

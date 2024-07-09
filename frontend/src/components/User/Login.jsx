@@ -55,9 +55,10 @@ const Login = () => {
                       type="text"
                       id="email"
                       name="email"
-                      value={email}
+                      value={formData.email}
                       onChange={onChange}
                       required
+                      autoComplete="off"
                     />
                     <input
                       placeholder="Password"
@@ -65,9 +66,10 @@ const Login = () => {
                       type="password"
                       id="password"
                       name="password"
-                      value={password}
+                      value={formData.password}
                       onChange={onChange}
                       required
+                      autoComplete="current-password"
                     />
                     <div className="flex items-center justify-between flex-wrap">
                       <label
