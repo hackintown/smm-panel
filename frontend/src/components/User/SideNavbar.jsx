@@ -66,10 +66,10 @@ const SideNavbar = ({
           <div className="">
             <h2 className="text-foreground">Balance:₹ 500</h2>
           </div>
-          <div className="flex items-center justify-between my-3">
+          <div className="flex items-center gap-2 justify-between my-3">
           <button
                 type="button"
-                className="flex items-center rounded-md bg-background px-2.5 py-1.5 text-sm font-medium shadow-sm border border-border"
+                className="flex text-foreground items-center rounded-md bg-background px-2.5 py-1.5 text-sm font-medium shadow-sm border border-border"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -89,7 +89,7 @@ const SideNavbar = ({
               </button>
               <button
                 type="button"
-                className="flex items-center rounded-md bg-background px-2.5 py-1.5 text-sm font-medium shadow-sm border border-border"
+                className="flex text-foreground items-center rounded-md bg-background px-2.5 py-1.5 text-sm font-medium shadow-sm border border-border"
               >
                 <IoLogOut size={20} className="mx-1" />
                 Logout

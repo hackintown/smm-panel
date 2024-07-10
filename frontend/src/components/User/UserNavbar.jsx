@@ -5,6 +5,11 @@ import { FaAngleDown } from "react-icons/fa6";
 import { useTheme } from "../../theme/ThemeContext";
 import { MdDarkMode } from "react-icons/md";
 import { MdOutlineLightMode } from "react-icons/md";
+import { FaHackerrank } from "react-icons/fa6";
+import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../../features/authSlice";
 
 const UserNavbar = ({
   handleToggleMenu,
@@ -12,12 +17,24 @@ const UserNavbar = ({
   selectedCurrency,
 }) => {
   const { darkMode, toggleTheme } = useTheme();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
+  };
   return (
     <nav className="bg-background border-b border-b-border relative">
       <div className="flex flex-wrap items-center justify-between px-4 py-4">
-        <a href="#" className="block font-semibold text-2xl text-foreground">
-          <span className="">Hackintown</span>
-        </a>
+        <Link
+          to="/dashboard"
+          className="block font-semibold text-2xl text-foreground"
+        >
+          <span className="flex items-center">
+            <FaHackerrank size={40} />
+            ackintown
+          </span>
+        </Link>
         <button
           onClick={handleToggleMenu}
           type="button"
@@ -45,14 +62,14 @@ const UserNavbar = ({
             <li>
               <Menu as="div" className="relative inline-block text-left">
                 <div>
-                  <MenuButton className="border border-border text-foreground bg-background inline-flex items-center w-full justify-center gap-x-1.5 rounded-md px-3 py-2 text-sm font-medium shadow-sm ">
+                  <MenuButton className="border border-border text-primary-foreground bg-primary hover:bg-accent inline-flex items-center w-full justify-center gap-x-1.5 rounded-md px-3 py-2 text-sm font-medium shadow-sm ">
                     {selectedCurrency === "INR" ? "₹ INR" : "$ USD"}
                     <FaAngleDown />
                   </MenuButton>
                 </div>
                 <MenuItems
                   transition
-                  className="absolute right-0 z-10 mt-2 w-full origin-top-right rounded-md shadow-lg bg-card hover:bg-destructive"
+                  className="absolute right-0 z-10 mt-2 w-full origin-top-right rounded-md shadow-lg bg-card hover:bg-accent"
                 >
                   <div className="py-1">
                     <MenuItem>
@@ -62,7 +79,7 @@ const UserNavbar = ({
                             selectedCurrency === "INR" ? "USD" : "INR"
                           )
                         }
-                        className="block px-4 py-2 text-sm text-foreground border-border rounded-md"
+                        className="block px-4 py-2 text-sm text-foreground hover:text-accent-foreground border-border rounded-md"
                       >
                         {selectedCurrency === "INR" ? "$ USD" : "₹ INR"}
                       </button>
@@ -74,7 +91,7 @@ const UserNavbar = ({
             <li>
               <button
                 type="button"
-                className="flex items-center rounded-md bg-background px-2.5 py-1.5 text-sm font-medium shadow-sm border border-border"
+                className="flex items-center rounded-md bg-background hover:bg-accent hover:text-accent-foreground px-2.5 py-2 text-sm font-medium shadow-sm border border-border"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -95,8 +112,9 @@ const UserNavbar = ({
             </li>
             <li>
               <button
+                onClick={handleLogout}
                 type="button"
-                className="flex items-center rounded-md bg-background px-2.5 py-1.5 text-sm font-medium shadow-sm border border-border"
+                className="flex items-center rounded-md bg-background hover:bg-accent hover:text-accent-foreground px-2.5 py-2 text-sm font-medium shadow-sm border border-border"
               >
                 <IoLogOut size={20} className="mx-1" />
                 Logout
@@ -105,7 +123,7 @@ const UserNavbar = ({
             <li>
               <button
                 onClick={toggleTheme}
-                className="flex items-center rounded-full bg-background p-1.5 text-sm font-medium shadow-sm"
+                className="flex items-center rounded-full bg-background hover:bg-accent hover:text-accent-foreground p-1.5 text-sm font-medium shadow-sm"
               >
                 {darkMode ? (
                   <MdOutlineLightMode size={25} />

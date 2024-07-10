@@ -76,6 +76,16 @@ export const loginAdmin = createAsyncThunk(
     }
   }
 );
+export const logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
+  try {
+    setAuthToken(null);
+    localStorage.removeItem("user");
+    localStorage.removeItem("role");
+    return;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response?.data || error.message);
+  }
+});
 
 const authSlice = createSlice({
   name: "auth",
@@ -126,6 +136,11 @@ const authSlice = createSlice({
       .addCase(loginAdmin.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(logout.fulfilled, (state, action) => {
+        state.user = null;
+        state.token = null;
+        state.role = null;
       });
   },
 });
