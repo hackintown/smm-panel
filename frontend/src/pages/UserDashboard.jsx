@@ -12,21 +12,30 @@ const UserDashboard = () => {
   const handleCurrencyChange = (currencyType) => {
     setSelectedCurrency(currencyType);
   };
+
   return (
     <>
-      <UserNavbar
-        handleToggleMenu={handleToggleMenu}
-        mobileToggle={mobileToggle}
-        selectedCurrency={selectedCurrency}
-        handleCurrencyChange={handleCurrencyChange}
-      />
-      <div className="flex">
-        <SideNavbar
+      <div className="fixed-header w-full">
+        <UserNavbar
+          handleToggleMenu={handleToggleMenu}
           mobileToggle={mobileToggle}
           selectedCurrency={selectedCurrency}
           handleCurrencyChange={handleCurrencyChange}
         />
-        <div className="w-full">
+      </div>
+      <div className="flex">
+        <div
+          className={`fixed-sidebar w-full ${
+            mobileToggle ? "block" : "hidden"
+          } md:block`}
+        >
+          <SideNavbar
+            mobileToggle={mobileToggle}
+            selectedCurrency={selectedCurrency}
+            handleCurrencyChange={handleCurrencyChange}
+          />
+        </div>
+        <div className="flex-1 md:ml-[290px] mt-[60px] md:mt-20">
           <Content />
         </div>
       </div>

@@ -127,3 +127,26 @@ body {
     --shadow: Color for shadows.
     --font-family: Font family for text.
 */
+
+.fixed-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+}
+
+.fixed-sidebar {
+  position: fixed;
+  top: 72px;
+  left: 0;
+  bottom: 0;
+  width: 288px; 
+  z-index: 10;
+}
+
+@media (max-width: 768px) {
+  .fixed-sidebar {
+    top: 0;
+  }
+}

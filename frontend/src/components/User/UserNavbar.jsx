@@ -57,7 +57,7 @@ const UserNavbar = ({
             />
           </svg>
         </button>
-        <div className="hidden w-full md:block md:w-auto" id="navbar-dropdown">
+        <div className="hidden w-full md:block md:w-auto">
           <ul className="flex flex-col items-center font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-background md:space-x-4 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
             <li>
               <Menu as="div" className="relative inline-block text-left">
