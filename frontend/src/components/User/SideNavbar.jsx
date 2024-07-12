@@ -122,7 +122,7 @@ const SideNavbar = ({
                 } rounded-lg w-full text-lg`}
               >
                 {IconComponent ? (
-                  <IconComponent className="mr-2.5" />
+                  <IconComponent className="mr-2.5 size-5" />
                 ) : (
                   <span>Icon-Missing</span>
                 )}
