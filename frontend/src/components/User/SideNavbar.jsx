@@ -28,6 +28,7 @@ const SideNavbar = ({
 }) => {
   const [activeItem, setActiveItem] = useState(2);
   const menuItems = useSelector((state) => state.sideNavbar.menuItems);
+  console.log(menuItems);
   const dispatch = useDispatch();
 
   const handleClick = (id) => {
@@ -110,7 +111,7 @@ const SideNavbar = ({
         {menuItems.map((item) => {
           const IconComponent = iconMap[item.icon];
           return (
-            <li key={item.id} className="mb-2">
+            <li key={`${item.id}- ${item.label}`} className="mb-2">
               <NavLink
                 href="#"
                 onClick={() => handleClick(item.id)}
@@ -120,8 +121,12 @@ const SideNavbar = ({
                     : "hover:bg-background hover:text-foreground"
                 } rounded-lg w-full text-lg`}
               >
-                <IconComponent />
-                <item.icon className="size-5" /> {item.label}
+                {IconComponent ? (
+                  <IconComponent className="mr-2.5" />
+                ) : (
+                  <span>Icon-Missing</span>
+                )}
+                {item.label}
               </NavLink>
             </li>
           );

@@ -50,17 +50,13 @@ const AdminPanel = () => {
           <input
             type="text"
             value={newItem.label}
-            onChange={(e) =>
-              setNewItem({ ...newItem, label: e.target.value })
-            }
+            onChange={(e) => setNewItem({ ...newItem, label: e.target.value })}
             placeholder="Label"
             className="px-4 py-2 border rounded-md w-1/2"
           />
           <select
             value={newItem.icon}
-            onChange={(e) =>
-              setNewItem({ ...newItem, icon: e.target.value })
-            }
+            onChange={(e) => setNewItem({ ...newItem, icon: e.target.value })}
             className="px-4 py-2 border rounded-md w-1/2"
           >
             {Object.keys(iconMap).map((icon) => (
@@ -84,11 +80,15 @@ const AdminPanel = () => {
             const IconComponent = iconMap[item.icon];
             return (
               <li
-                key={item.id}
+                key={`${item.id}-${item.label}`}
                 className="flex justify-between items-center mb-2"
               >
                 <div className="flex items-center space-x-2">
-                  <IconComponent />
+                  {IconComponent ? (
+                    <IconComponent />
+                  ) : (
+                    <span>Icon-Missing</span>
+                  )}
                   {editingItem && editingItem.id === item.id ? (
                     <>
                       <input

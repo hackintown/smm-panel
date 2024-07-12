@@ -52,19 +52,21 @@ export const removeNavbarItem = createAsyncThunk(
 );
 
 const initialState = {
-  menuItems: JSON.parse(localStorage.getItem("menuItems")) || [
-    { id: 1, label: "Dashboard", icon: "FaTachometerAlt" },
-    { id: 2, label: "New Order", icon: "FaShoppingBag" },
-    { id: 3, label: "Orders", icon: "FaClipboardList" },
-    { id: 4, label: "Services", icon: "FaCogs" },
-    { id: 5, label: "Add Funds", icon: "FaMoneyBillWave" },
-    { id: 6, label: "Tickets", icon: "FaTicketAlt" },
-    { id: 7, label: "Api Docs", icon: "FaBook" },
-    { id: 8, label: "Child Panel", icon: "FaChild" },
-    { id: 9, label: "Affiliate", icon: "FaGift" },
-    { id: 10, label: "Terms", icon: "FaExclamationTriangle" },
-    { id: 11, label: "Blogs", icon: "FaBlog" },
-  ],
+  menuItems: localStorage.getItem("menuItems")
+    ? JSON.parse(localStorage.getItem("menuItems"))
+    : [
+        { id: 1, label: "Dashboard", icon: "FaTachometerAlt" },
+        { id: 2, label: "New Order", icon: "FaShoppingBag" },
+        { id: 3, label: "Orders", icon: "FaClipboardList" },
+        { id: 4, label: "Services", icon: "FaCogs" },
+        { id: 5, label: "Add Funds", icon: "FaMoneyBillWave" },
+        { id: 6, label: "Tickets", icon: "FaTicketAlt" },
+        { id: 7, label: "Api Docs", icon: "FaBook" },
+        { id: 8, label: "Child Panel", icon: "FaChild" },
+        { id: 9, label: "Affiliate", icon: "FaGift" },
+        { id: 10, label: "Terms", icon: "FaExclamationTriangle" },
+        { id: 11, label: "Blogs", icon: "FaBlog" },
+      ],
   status: "idle",
   error: null,
 };
