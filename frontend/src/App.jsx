@@ -33,7 +33,9 @@ function App() {
 
   return (
     <>
-      {!location.pathname.startsWith("/admin" && "/dashboard") && <Navbar />}
+      {!location.pathname.startsWith(
+        "/admin" && "/dashboard" && "/admin/dashboard"
+      ) && <Navbar />}
       {loading ? (
         <p>Loading...</p>
       ) : (

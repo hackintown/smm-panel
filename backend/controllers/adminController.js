@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Admin = require("../models/adminModel");
+const mongoose = require("mongoose");
 
 const loginAdmin = async (req, res) => {
   const { username, password } = req.body;
@@ -15,7 +16,7 @@ const loginAdmin = async (req, res) => {
       return res.status(400).json({ msg: "Invalid credentials" });
     }
 
-    const token = jwt.sign({ adminId: admin._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ adminId: admin._id, role: admin.role }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
 

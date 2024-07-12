@@ -35,7 +35,7 @@ const UserDashboard = () => {
             handleCurrencyChange={handleCurrencyChange}
           />
         </div>
-        <div className="flex-1 md:ml-[290px] mt-[60px] md:mt-20">
+        <div className="flex-1 md:ml-[290px] mt-[60px] md:mt-0">
           <Content />
         </div>
       </div>

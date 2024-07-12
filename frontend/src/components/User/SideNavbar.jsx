@@ -1,42 +1,35 @@
-import React, { useState } from "react";
-import {
-  FaTachometerAlt,
-  FaShoppingBag,
-  FaClipboardList,
-  FaCogs,
-  FaMoneyBillWave,
-  FaTicketAlt,
-  FaBook,
-  FaChild,
-  FaGift,
-  FaExclamationTriangle,
-  FaBlog,
-} from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { FaAngleDown } from "react-icons/fa6";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { MdOutlineVerified } from "react-icons/md";
 import { IoLogOut } from "react-icons/io5";
+import * as FaIcons from "react-icons/fa";
+import { NavLink } from "react-router-dom";
 
-const menuItems = [
-  { id: 1, label: "Dashboard", icon: FaTachometerAlt },
-  { id: 2, label: "New Order", icon: FaShoppingBag },
-  { id: 3, label: "Orders", icon: FaClipboardList },
-  { id: 4, label: "Services", icon: FaCogs },
-  { id: 5, label: "Add Funds", icon: FaMoneyBillWave },
-  { id: 6, label: "Tickets", icon: FaTicketAlt },
-  { id: 7, label: "Api Docs", icon: FaBook },
-  { id: 8, label: "Child Panel", icon: FaChild },
-  { id: 9, label: "Affiliate", icon: FaGift },
-  { id: 10, label: "Terms", icon: FaExclamationTriangle },
-  { id: 11, label: "Blogs", icon: FaBlog },
-];
-
+const iconMap = {
+  FaTachometerAlt: FaIcons.FaTachometerAlt,
+  FaShoppingBag: FaIcons.FaShoppingBag,
+  FaClipboardList: FaIcons.FaClipboardList,
+  FaCogs: FaIcons.FaCogs,
+  FaMoneyBillWave: FaIcons.FaMoneyBillWave,
+  FaTicketAlt: FaIcons.FaTicketAlt,
+  FaBook: FaIcons.FaBook,
+  FaChild: FaIcons.FaChild,
+  FaGift: FaIcons.FaGift,
+  FaExclamationTriangle: FaIcons.FaExclamationTriangle,
+  FaBlog: FaIcons.FaBlog,
+};
+import { fetchNavbarItems } from "../../features/sideNavbarSlice";
 const SideNavbar = ({
   mobileToggle,
   handleCurrencyChange,
   selectedCurrency,
 }) => {
   const [activeItem, setActiveItem] = useState(2);
+  const menuItems = useSelector((state) => state.sideNavbar.menuItems);
+  const dispatch = useDispatch();
+
   const handleClick = (id) => {
     setActiveItem(id);
   };
@@ -114,21 +107,25 @@ const SideNavbar = ({
             </button>
           </div>
         </li>
-        {menuItems.map((item) => (
-          <li key={item.id}>
-            <a
-              href="#"
-              onClick={() => handleClick(item.id)}
-              className={`flex items-center py-2 px-3 ${
-                activeItem === item.id
-                  ? "bg-background text-foreground"
-                  : "hover:bg-background hover:text-foreground"
-              } rounded-lg w-full text-lg`}
-            >
-              <item.icon className="mr-2 size-5" /> {item.label}
-            </a>
-          </li>
-        ))}
+        {menuItems.map((item) => {
+          const IconComponent = iconMap[item.icon];
+          return (
+            <li key={item.id} className="mb-2">
+              <NavLink
+                href="#"
+                onClick={() => handleClick(item.id)}
+                className={`flex items-center py-2 px-3 ${
+                  activeItem === item.id
+                    ? "bg-background text-foreground"
+                    : "hover:bg-background hover:text-foreground"
+                } rounded-lg w-full text-lg`}
+              >
+                <IconComponent />
+                <item.icon className="size-5" /> {item.label}
+              </NavLink>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
