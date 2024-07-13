@@ -1,14 +1,14 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const navbarItemSchema = new mongoose.Schema({
   label: {
     type: String,
-    required: true
+    required: true,
   },
   icon: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 });
 
-module.exports = mongoose.model('NavbarItem', navbarItemSchema);
+module.exports = mongoose.model("NavbarItem", navbarItemSchema);

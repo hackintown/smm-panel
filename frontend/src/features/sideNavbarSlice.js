@@ -33,7 +33,7 @@ export const updateNavbarItem = createAsyncThunk(
   async (updatedItem) => {
     try {
       const response = await axios.put(
-        `${apiUrl}/api/navbar-items/${updatedItem.id}`,
+        `${apiUrl}/api/navbar-items/${updatedItem._id}`,
         updatedItem
       );
       return response.data;
@@ -46,27 +46,17 @@ export const updateNavbarItem = createAsyncThunk(
 export const removeNavbarItem = createAsyncThunk(
   "navbar/removeNavbarItem",
   async (id) => {
-    await axios.delete(`${apiUrl}/api/navbar-items/${id}`);
-    return id;
+    try {
+      await axios.delete(`${apiUrl}/api/navbar-items/${id}`);
+      return { id };
+    } catch (error) {
+      throw Error(error.response.data.message);
+    }
   }
 );
 
 const initialState = {
-  menuItems: localStorage.getItem("menuItems")
-    ? JSON.parse(localStorage.getItem("menuItems"))
-    : [
-        { id: 1, label: "Dashboard", icon: "FaTachometerAlt" },
-        { id: 2, label: "New Order", icon: "FaShoppingBag" },
-        { id: 3, label: "Orders", icon: "FaClipboardList" },
-        { id: 4, label: "Services", icon: "FaCogs" },
-        { id: 5, label: "Add Funds", icon: "FaMoneyBillWave" },
-        { id: 6, label: "Tickets", icon: "FaTicketAlt" },
-        { id: 7, label: "Api Docs", icon: "FaBook" },
-        { id: 8, label: "Child Panel", icon: "FaChild" },
-        { id: 9, label: "Affiliate", icon: "FaGift" },
-        { id: 10, label: "Terms", icon: "FaExclamationTriangle" },
-        { id: 11, label: "Blogs", icon: "FaBlog" },
-      ],
+  menuItems: [],
   status: "idle",
   error: null,
 };
@@ -90,7 +80,7 @@ const sideNavbarSlice = createSlice({
     },
     removeNavbarItem: (state, action) => {
       state.menuItems = state.menuItems.filter(
-        (item) => item.id !== action.payload
+        (item) => item.id !== action.payload.id
       );
       localStorage.setItem("menuItems", JSON.stringify(state.menuItems));
     },
@@ -143,7 +133,7 @@ const sideNavbarSlice = createSlice({
       .addCase(removeNavbarItem.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.menuItems = state.menuItems.filter(
-          (item) => item.id !== action.payload
+          (item) => item.id !== action.payload.id
         );
         localStorage.setItem("menuItems", JSON.stringify(state.menuItems));
       })

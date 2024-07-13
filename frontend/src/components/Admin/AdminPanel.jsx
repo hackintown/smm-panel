@@ -4,6 +4,7 @@ import {
   addNavbarItem,
   updateNavbarItem,
   removeNavbarItem,
+  fetchNavbarItems,
 } from "../../features/sideNavbarSlice";
 import * as FaIcons from "react-icons/fa";
 
@@ -31,6 +32,10 @@ const AdminPanel = () => {
   });
   const [editingItem, setEditingItem] = useState(null);
 
+  useEffect(() => {
+    dispatch(fetchNavbarItems());
+  }, [dispatch]);
+
   const handleAdd = () => {
     dispatch(addNavbarItem({ id: Date.now(), ...newItem }));
     setNewItem({ label: "", icon: "FaTachometerAlt" });
@@ -39,6 +44,11 @@ const AdminPanel = () => {
   const handleEdit = () => {
     dispatch(updateNavbarItem(editingItem));
     setEditingItem(null);
+  };
+
+  const handleDeleteItem = (id) => {
+    console.log(`Removing navbar item with ID: ${id}`);
+    dispatch(removeNavbarItem(id));
   };
 
   return (
@@ -140,7 +150,7 @@ const AdminPanel = () => {
                     </button>
                   )}
                   <button
-                    onClick={() => dispatch(removeNavbarItem(item.id))}
+                    onClick={() => handleDeleteItem(item._id)}
                     className="px-4 py-2 bg-red-500 text-white rounded-md"
                   >
                     Remove

@@ -5,6 +5,6 @@ const navbarController = require("../controllers/navbarController");
 router.get("/navbar-items", navbarController.getNavbarItems);
 router.post("/navbar-items", navbarController.addNavbarItem);
 router.put("/navbar-items/:id", navbarController.updateNavbarItem);
-router.delete("/navbar-items/:id", navbarController.deleteNavrbarItem);
+router.delete("/navbar-items/:id", navbarController.deleteNavbarItem);
 
 module.exports = router;

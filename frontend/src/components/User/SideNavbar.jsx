@@ -28,8 +28,11 @@ const SideNavbar = ({
 }) => {
   const [activeItem, setActiveItem] = useState(2);
   const menuItems = useSelector((state) => state.sideNavbar.menuItems);
-  console.log(menuItems);
   const dispatch = useDispatch();
+  
+  useEffect(() => {
+    dispatch(fetchNavbarItems());
+  }, [dispatch]);
 
   const handleClick = (id) => {
     setActiveItem(id);

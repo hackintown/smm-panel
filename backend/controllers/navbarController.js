@@ -1,9 +1,10 @@
 const NavbarItem = require("../models/navbarModel");
+const mongoose = require("mongoose");
 
 // Get all navbar items
 exports.getNavbarItems = async (req, res) => {
   try {
-    const navbarItems = await NavbarItem.find();
+    const navbarItems = await NavbarItem.find().exec();
     res.json(navbarItems);
   } catch (error) {
     console.error(error);
@@ -38,12 +39,28 @@ exports.updateNavbarItem = async (req, res) => {
 };
 
 // Delete a navbar item
-exports.deleteNavrbarItem = async (req, res) => {
+exports.deleteNavbarItem = async (req, res) => {
   try {
     const id = req.params.id;
-    await NavbarItem.findByIdAndRemove(id);
+
+    // Check if the ID is valid
+    if (!id) {
+      return res.status(400).json({ message: "Invalid ID supplied" });
+    }
+
+    // Check if the navbar item exists
+    const navbarItem = await NavbarItem.findById(id);
+    if (!navbarItem) {
+      return res.status(404).json({ message: "Navbar item not found" });
+    }
+
+    // Delete the navbar item
+    await NavbarItem.findByIdAndDelete(id);
+
     res.json({ message: "Navbar item removed successfully" });
   } catch (error) {
+    console.error("Error deleting navbar item:", error);
     res.status(500).json({ message: "Error removing navbar item" });
   }
 };
+
