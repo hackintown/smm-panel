@@ -4,10 +4,12 @@ import AdminNavbar from "../components/Admin/AdminNavbar";
 
 const AdminDashboard = () => {
   return (
-    <div>
-      <AdminNavbar />
-      <AdminPanel/>
-    </div>
+    <>
+      <div className="fixed-header w-full">
+        <AdminNavbar />
+      </div>
+      <AdminPanel />
+    </>
   );
 };
 

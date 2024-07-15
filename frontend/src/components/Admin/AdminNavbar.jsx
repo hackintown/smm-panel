@@ -1,14 +1,44 @@
 import React, { useRef, useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { FaHackerrank } from "react-icons/fa";
 
 const AdminNavbar = () => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null);
-  const handleDropdownClick = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+  const [isServicesDropdownOpen, setIsServicesDropdownOpen] = useState(false);
+  const [isOrdersDropdownOpen, setIsOrdersDropdownOpen] = useState(false);
+  const [isExtraMenuDropdownOpen, setIsExtraMenuDropdownOpen] = useState(false);
+
+  const servicesDropdownRef = useRef(null);
+  const ordersDropdownRef = useRef(null);
+  const extraMenuDropdownRef = useRef(null);
+
+  const handleDropdownClick = (dropdownType) => {
+    if (dropdownType === "services") {
+      setIsServicesDropdownOpen(!isServicesDropdownOpen);
+      setIsOrdersDropdownOpen(false);
+      setIsExtraMenuDropdownOpen(false);
+    } else if (dropdownType === "orders") {
+      setIsServicesDropdownOpen(false);
+      setIsOrdersDropdownOpen(!isOrdersDropdownOpen);
+      setIsExtraMenuDropdownOpen(false);
+    } else if (dropdownType === "extraMenu") {
+      setIsServicesDropdownOpen(false);
+      setIsOrdersDropdownOpen(false);
+      setIsExtraMenuDropdownOpen(!isExtraMenuDropdownOpen);
+    }
   };
+
   const handleClickOutside = (event) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-      setIsDropdownOpen(false);
+    if (
+      servicesDropdownRef.current &&
+      !servicesDropdownRef.current.contains(event.target) &&
+      ordersDropdownRef.current &&
+      !ordersDropdownRef.current.contains(event.target) &&
+      extraMenuDropdownRef.current &&
+      !extraMenuDropdownRef.current.contains(event.target)
+    ) {
+      setIsServicesDropdownOpen(false);
+      setIsOrdersDropdownOpen(false);
+      setIsExtraMenuDropdownOpen(false);
     }
   };
 
@@ -22,11 +52,15 @@ const AdminNavbar = () => {
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700 shadow-md">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <a href="#" className="flex items-center space-x-3 rtl:space-x-reverse">
-          <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-            Hackintown
+        <Link
+          to="/admin/dashboard"
+          className="block font-semibold text-xl text-foreground"
+        >
+          <span className="flex items-center">
+            <FaHackerrank size={32} />
+            ackintown
           </span>
-        </a>
+        </Link>
         <button
           type="button"
           className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
@@ -56,15 +90,23 @@ const AdminNavbar = () => {
                 className="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500 dark:bg-blue-600 md:dark:bg-transparent"
                 aria-current="page"
               >
-                Home
+                Dashboard
               </a>
             </li>
-            <li ref={dropdownRef}>
+            <li>
+              <a
+                href="#"
+                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+              >
+                Users
+              </a>
+            </li>
+            <li ref={servicesDropdownRef}>
               <button
-                onClick={handleDropdownClick}
+                onClick={() => handleDropdownClick("services")}
                 className="flex items-center justify-between w-full py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:w-auto dark:text-white md:dark:hover:text-blue-500 dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent"
               >
-                Dropdown
+                Services
                 <svg
                   className="w-2.5 h-2.5 ms-2.5"
                   xmlns="http://www.w3.org/2000/svg"
@@ -80,7 +122,127 @@ const AdminNavbar = () => {
                   />
                 </svg>
               </button>
-              {isDropdownOpen && (
+              {isServicesDropdownOpen && (
+                <div className="absolute top-15 z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                  <ul className="py-2 text-sm text-gray-700 dark:text-gray-400">
+                    <li>
+                      <a
+                        href="#"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        Dashboard
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        Settings
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        Earnings
+                      </a>
+                    </li>
+                  </ul>
+                  <div className="py-1">
+                    <a
+                      href="#"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                    >
+                      Sign out
+                    </a>
+                  </div>
+                </div>
+              )}
+            </li>
+            <li ref={ordersDropdownRef}>
+              <button
+                onClick={() => handleDropdownClick("orders")}
+                className="flex items-center justify-between w-full py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:w-auto dark:text-white md:dark:hover:text-blue-500 dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent"
+              >
+                Orders
+                <svg
+                  className="w-2.5 h-2.5 ms-2.5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 10 6"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="m1 1 4 4 4-4"
+                  />
+                </svg>
+              </button>
+              {isOrdersDropdownOpen && (
+                <div className="absolute top-15 z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                  <ul className="py-2 text-sm text-gray-700 dark:text-gray-400">
+                    <li>
+                      <a
+                        href="#"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        Dashboard
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        Settings
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        Earnings
+                      </a>
+                    </li>
+                  </ul>
+                  <div className="py-1">
+                    <a
+                      href="#"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                    >
+                      Sign out
+                    </a>
+                  </div>
+                </div>
+              )}
+            </li>
+            <li ref={extraMenuDropdownRef}>
+              <button
+                onClick={() => handleDropdownClick("extraMenu")}
+                className="flex items-center justify-between w-full py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:w-auto dark:text-white md:dark:hover:text-blue-500 dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent"
+              >
+                Extra Menu
+                <svg
+                  className="w-2.5 h-2.5 ms-2.5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 10 6"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="m1 1 4 4 4-4"
+                  />
+                </svg>
+              </button>
+              {isExtraMenuDropdownOpen && (
                 <div className="absolute top-15 z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                   <ul className="py-2 text-sm text-gray-700 dark:text-gray-400">
                     <li>
@@ -124,7 +286,7 @@ const AdminNavbar = () => {
                 href="#"
                 className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
               >
-                Services
+                Settings
               </a>
             </li>
             <li>
@@ -132,7 +294,7 @@ const AdminNavbar = () => {
                 href="#"
                 className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
               >
-                Pricing
+                Account
               </a>
             </li>
             <li>
@@ -140,8 +302,16 @@ const AdminNavbar = () => {
                 href="#"
                 className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
               >
-                Contact
+                Owner
               </a>
+            </li>
+            <li>
+              <Link
+                to="/admin"
+                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+              >
+                Logout
+              </Link>
             </li>
           </ul>
         </div>

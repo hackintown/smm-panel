@@ -27,12 +27,24 @@ const SideNavbar = ({
   selectedCurrency,
 }) => {
   const [activeItem, setActiveItem] = useState(2);
+  const [dynamicIconMap, setDynamicIconMap] = useState(iconMap);
   const menuItems = useSelector((state) => state.sideNavbar.menuItems);
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     dispatch(fetchNavbarItems());
   }, [dispatch]);
+
+  useEffect(() => {
+    menuItems.forEach((item) => {
+      if (!dynamicIconMap[item.icon] && FaIcons[item.icon]) {
+        setDynamicIconMap((prevIconMap) => ({
+          ...prevIconMap,
+          [item.icon]: FaIcons[item.icon],
+        }));
+      }
+    });
+  }, [menuItems, dynamicIconMap]);
 
   const handleClick = (id) => {
     setActiveItem(id);
@@ -112,7 +124,7 @@ const SideNavbar = ({
           </div>
         </li>
         {menuItems.map((item) => {
-          const IconComponent = iconMap[item.icon];
+          const IconComponent = dynamicIconMap[item.icon];
           return (
             <li key={`${item.id}- ${item.label}`} className="mb-2">
               <NavLink

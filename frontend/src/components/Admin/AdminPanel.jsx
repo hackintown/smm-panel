@@ -7,6 +7,7 @@ import {
   fetchNavbarItems,
 } from "../../features/sideNavbarSlice";
 import * as FaIcons from "react-icons/fa";
+import IconSelector from "./IconSelector";
 
 const iconMap = {
   FaTachometerAlt: FaIcons.FaTachometerAlt,
@@ -31,12 +32,18 @@ const AdminPanel = () => {
     icon: "FaTachometerAlt",
   });
   const [editingItem, setEditingItem] = useState(null);
+  const [dynamicIconMap, setDynamicIconMap] = useState(iconMap);
 
   useEffect(() => {
     dispatch(fetchNavbarItems());
   }, [dispatch]);
 
   const handleAdd = () => {
+    const newIcon = newItem.icon;
+    setDynamicIconMap((prevIconMap) => ({
+      ...prevIconMap,
+      [newIcon]: FaIcons[newIcon],
+    }));
     dispatch(addNavbarItem({ id: Date.now(), ...newItem }));
     setNewItem({ label: "", icon: "FaTachometerAlt" });
   };
@@ -52,8 +59,8 @@ const AdminPanel = () => {
   };
 
   return (
-    <div className="p-4 bg-gray-100 min-h-screen">
-      <h2 className="text-2xl font-bold mb-4 text-center">Admin Panel</h2>
+    <div className="p-4 bg-card max-w-screen-xl w-full mx-auto mt-[85px]">
+      <h2 className="text-2xl font-bold mb-4 text-center">Customise Side Navbar</h2>
       <div className="mb-6">
         <h3 className="text-xl font-semibold mb-2">Add Menu Item</h3>
         <div className="flex space-x-2 mb-4">
@@ -64,17 +71,10 @@ const AdminPanel = () => {
             placeholder="Label"
             className="px-4 py-2 border rounded-md w-1/2"
           />
-          <select
-            value={newItem.icon}
-            onChange={(e) => setNewItem({ ...newItem, icon: e.target.value })}
-            className="px-4 py-2 border rounded-md w-1/2"
-          >
-            {Object.keys(iconMap).map((icon) => (
-              <option key={icon} value={icon}>
-                {icon}
-              </option>
-            ))}
-          </select>
+          <IconSelector
+            selectedIcon={newItem.icon}
+            onSelect={(icon) => setNewItem({ ...newItem, icon })}
+          />
           <button
             onClick={handleAdd}
             className="px-4 py-2 bg-blue-500 text-white rounded-md"
@@ -87,7 +87,7 @@ const AdminPanel = () => {
         <h3 className="text-xl font-semibold mb-2">Edit Menu Items</h3>
         <ul>
           {menuItems.map((item) => {
-            const IconComponent = iconMap[item.icon];
+            const IconComponent = dynamicIconMap[item.icon];
             return (
               <li
                 key={`${item.id}-${item.label}`}
@@ -122,7 +122,7 @@ const AdminPanel = () => {
                         }
                         className="px-4 py-2 border rounded-md w-1/2"
                       >
-                        {Object.keys(iconMap).map((icon) => (
+                        {Object.keys(dynamicIconMap).map((icon) => (
                           <option key={icon} value={icon}>
                             {icon}
                           </option>
