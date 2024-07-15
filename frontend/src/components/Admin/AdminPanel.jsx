@@ -38,24 +38,47 @@ const AdminPanel = () => {
     dispatch(fetchNavbarItems());
   }, [dispatch]);
 
+  useEffect(() => {
+    const storedItems = JSON.parse(localStorage.getItem("menuItems"));
+    if (storedItems) {
+      storedItems.forEach((item) => {
+        if (!dynamicIconMap[item.icon]) {
+          setDynamicIconMap((prevIconMap) => ({
+            ...prevIconMap,
+            [item.icon]: FaIcons[item.icon],
+          }));
+        }
+      });
+    }
+  }, []);
+  
   const handleAdd = () => {
     const newIcon = newItem.icon;
     setDynamicIconMap((prevIconMap) => ({
       ...prevIconMap,
       [newIcon]: FaIcons[newIcon],
     }));
-    dispatch(addNavbarItem({ id: Date.now(), ...newItem }));
+    const newMenuItem = { id: Date.now(), ...newItem };
+    dispatch(addNavbarItem(newMenuItem));
+    const updatedItems = [...menuItems, newMenuItem];
+    localStorage.setItem("menuItems", JSON.stringify(updatedItems));
     setNewItem({ label: "", icon: "FaTachometerAlt" });
   };
 
   const handleEdit = () => {
     dispatch(updateNavbarItem(editingItem));
+    const updatedItems = menuItems.map((item) =>
+      item.id === editingItem.id ? editingItem : item
+    );
+    localStorage.setItem("menuItems", JSON.stringify(updatedItems));
     setEditingItem(null);
   };
 
   const handleDeleteItem = (id) => {
     console.log(`Removing navbar item with ID: ${id}`);
     dispatch(removeNavbarItem(id));
+    const updatedItems = menuItems.filter((item) => item.id !== id);
+    localStorage.setItem("menuItems", JSON.stringify(updatedItems));
   };
 
   return (

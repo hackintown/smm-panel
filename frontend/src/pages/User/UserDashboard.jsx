@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import Content from "../components/User/Content";
-import UserNavbar from "../components/User/UserNavbar";
-import SideNavbar from "../components/User/SideNavbar";
+import Content from "../../components/User/Content";
+import UserNavbar from "../../components/User/UserNavbar";
+import SideNavbar from "../../components/User/SideNavbar";
 
 const UserDashboard = () => {
   const [mobileToggle, setMobileToggle] = useState(false);

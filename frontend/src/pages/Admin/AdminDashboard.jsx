@@ -1,6 +1,6 @@
-import React from "react";
-import AdminPanel from "../components/Admin/AdminPanel";
-import AdminNavbar from "../components/Admin/AdminNavbar";
+import React, { useState } from "react";
+import AdminPanel from "../../components/Admin/AdminPanel";
+import AdminNavbar from "../../components/Admin/AdminNavbar";
 
 const AdminDashboard = () => {
   return (
@@ -8,6 +8,7 @@ const AdminDashboard = () => {
       <div className="fixed-header w-full">
         <AdminNavbar />
       </div>
+
       <AdminPanel />
     </>
   );
