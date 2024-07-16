@@ -5,7 +5,7 @@ import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { MdOutlineVerified } from "react-icons/md";
 import { IoLogOut } from "react-icons/io5";
 import * as FaIcons from "react-icons/fa";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 const iconMap = {
   FaTachometerAlt: FaIcons.FaTachometerAlt,
@@ -29,6 +29,7 @@ const SideNavbar = ({
   const [activeItem, setActiveItem] = useState(2);
   const [dynamicIconMap, setDynamicIconMap] = useState(iconMap);
   const menuItems = useSelector((state) => state.sideNavbar.menuItems);
+  const location = useLocation(); // Get current location
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -46,9 +47,6 @@ const SideNavbar = ({
     });
   }, [menuItems, dynamicIconMap]);
 
-  const handleClick = (id) => {
-    setActiveItem(id);
-  };
   return (
     <div
       className={`${
@@ -128,13 +126,13 @@ const SideNavbar = ({
           return (
             <li key={`${item.id}- ${item.label}`} className="mb-2">
               <NavLink
-                href="#"
-                onClick={() => handleClick(item.id)}
-                className={`flex items-center py-2 px-3 ${
-                  activeItem === item.id
+                to={item.path}
+                isActive={() => item.path === location.pathname}
+                className={`flex items-center py-2 px-3 rounded-lg w-full text-lg ${
+                  item.path === location.pathname
                     ? "bg-background text-foreground"
                     : "hover:bg-background hover:text-foreground"
-                } rounded-lg w-full text-lg`}
+                }`}
               >
                 {IconComponent ? (
                   <IconComponent className="mr-2.5 size-5" />

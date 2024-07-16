@@ -1,3 +1,4 @@
+import React from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -25,42 +26,60 @@ import Task from "./pages/Admin/Task";
 import UpdatePrice from "./pages/Admin/UpdatePrice";
 import CategorySort from "./pages/Admin/CategorySort";
 import Error404 from "./pages/Admin/Error404";
+import Sellers from "./components/Admin/Sellers";
+import GeneralSetting from "./components/Admin/GeneralSetting";
+import PaymentMethod from "./components/Admin/PaymentMethod";
 
-function App() {
+const Loading = () => <p>Loading...</p>;
+
+const UserRoutes = ({ user, role }) =>
+  user && role === "user" ? (
+    <UserDashboard />
+  ) : (
+    <Navigate to="/login" replace />
+  );
+
+const AdminRoutes = ({ user, role }) =>
+  user && role === "admin" ? (
+    <AdminDashboard />
+  ) : (
+    <Navigate to="/admin" replace />
+  );
+
+const App = () => {
   const { user, role, loading } = useSelector((state) => state.auth);
   const location = useLocation();
-
-  const UserRoutes = () =>
-    user && role === "user" ? (
-      <UserDashboard />
-    ) : (
-      <Navigate to="/login" replace />
-    );
-
-  const AdminRoutes = () =>
-    user && role === "admin" ? (
-      <AdminDashboard />
-    ) : (
-      <Navigate to="/admin" replace />
-    );
 
   const isAdminPath = location.pathname.startsWith("/admin");
   const isAdminLoginPage =
     location.pathname === "/admin" || location.pathname === "/admin/login";
+
   return (
     <>
-      {!isAdminLoginPage && !isAdminPath && <Navbar />}
+      {!isAdminPath && !isAdminLoginPage && <Navbar />}
       {isAdminPath && !isAdminLoginPage && <AdminNavbar />}
       {loading ? (
-        <p>Loading...</p>
+        <Loading />
       ) : (
         <Routes>
+          <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/admin/" element={<AdminLogin />} />
-          <Route path="/admin/dashboard" element={<AdminRoutes />} />
-          <Route path="dashboard" element={<UserRoutes />} />
-          <Route path="/admin/settings" element={<Settings />} />
+          <Route path="/admin" element={<AdminLogin />} />
+          <Route
+            path="/admin/dashboard"
+            element={<AdminRoutes user={user} role={role} />}
+          />
+          <Route
+            path="/dashboard"
+            element={<UserRoutes user={user} role={role} />}
+          />
+          <Route path="/admin/settings/*" element={<Settings />}>
+            <Route index element={<GeneralSetting />} />
+            <Route path="general-settings" element={<GeneralSetting />} />
+            <Route path="sellers" element={<Sellers />} />
+            <Route path="payment-methods" element={<PaymentMethod />} />
+          </Route>
           <Route path="/admin/clients" element={<Clients />} />
           <Route path="/admin/orders" element={<Order />} />
           <Route path="/admin/services" element={<Services />} />
@@ -79,6 +98,6 @@ function App() {
       )}
     </>
   );
-}
+};
 
 export default App;
