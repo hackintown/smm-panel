@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { FaCaretDown } from "react-icons/fa6";
 import { MdEditSquare } from "react-icons/md";
@@ -12,7 +12,7 @@ const Sellers = () => {
   const [isProviderOpen, setIsProviderOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [selectedOption, setSelectedOption] = useState("No");
-
+  const closeOutClick = useRef(null);
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
@@ -27,6 +27,26 @@ const Sellers = () => {
   const handleOptionClick = (option) => {
     setSelectedOption(option);
   };
+
+  const handleClickOutside = (event) => {
+    if (
+      closeOutClick.current &&
+      !closeOutClick.current.contains(event.target)
+    ) {
+      console.log("Clicked outside modal");
+      setIsProviderOpen(false);
+    } else {
+      console.log("Clicked inside modal");
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <>
       <div className="mb-2">
@@ -45,7 +65,10 @@ const Sellers = () => {
             </div>
             <span className="hidden sm:inline-block"></span>
             &#8203;
-            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            <div
+              ref={closeOutClick}
+              className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+            >
               <div className="bg-white">
                 <div className="">
                   <div className="text-center sm:text-left">

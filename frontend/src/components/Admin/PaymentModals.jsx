@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { FaCaretDown } from "react-icons/fa6";
 import { VscPercentage } from "react-icons/vsc";
@@ -37,11 +37,29 @@ const formats = [
 ];
 const PaymentModals = ({ isPaymentModalOpen, setIsPaymentModalOpen }) => {
   console.log(`Its me modal: ${isPaymentModalOpen}`);
-  const [inputValue, setInputValue] = useState();
+  const [inputValue, setInputValue] = useState({
+    methodName: "",
+    minimumAmount: "",
+    maximumAmount: "",
+    feePercentage: "",
+    bonusPercentage: "",
+    bonusStartAmount: "",
+    merchantId: "",
+    gmailAddress: "",
+    appPassword: "",
+    apiPublicKey: "",
+    apiSecretKey: "",
+  });
   const [editorValue, setEditorValue] = useState("");
+  const [status, setStatus] = useState("Inactive");
+  const closeOutClick = useRef();
+
   const handleInputChange = (e) => {
-    e.preventDefault();
-    setInputValue(e.target.value);
+    const { name, value } = e.target;
+    setInputValue((prevValue) => ({
+      ...prevValue,
+      [name]: value,
+    }));
   };
   const handleProviderClose = () => {
     setIsPaymentModalOpen(false);
@@ -49,18 +67,39 @@ const PaymentModals = ({ isPaymentModalOpen, setIsPaymentModalOpen }) => {
   const handleEditorChange = (value) => {
     setEditorValue(value);
   };
+  const handleStatusClick = (option) => {
+    setStatus(option);
+  };
+
+  const handleClickOutside = (event) => {
+    if (
+      closeOutClick.current &&
+      !closeOutClick.current.contains(event.target)
+    ) {
+      setIsPaymentModalOpen(false);
+    } else {
+      console.log("Clicked inside modal");
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div>
       {isPaymentModalOpen && (
-        <div className="fixed z-10 inset-0 overflow-y-auto w-full">
+        <div  className="fixed z-10 inset-0 overflow-y-auto w-full">
           <div className="flex items-center justify-center min-h-screen text-center sm:block">
             <div className="fixed inset-0 transition-opacity">
               <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
             </div>
             <span className="hidden sm:inline-block"></span>
             &#8203;
-            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            <div ref={closeOutClick} className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
               <div className="bg-white">
                 <div className="">
                   <div className="text-center sm:text-left">
@@ -83,10 +122,11 @@ const PaymentModals = ({ isPaymentModalOpen, setIsPaymentModalOpen }) => {
                         </label>
                         <input
                           type="text"
-                          id="apiUrl"
+                          id="methodName"
+                          name="methodName"
                           className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           placeholder="Enter API URL"
-                          value={inputValue}
+                          value={inputValue.methodName}
                           onChange={handleInputChange}
                         />
                         <label
@@ -97,8 +137,11 @@ const PaymentModals = ({ isPaymentModalOpen, setIsPaymentModalOpen }) => {
                         </label>
                         <input
                           type="number"
+                          id="minimumAmount"
                           className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder=""
+                          name="minimumAmount"
+                          value={inputValue.minimumAmount}
+                          onChange={handleInputChange}
                         />
                         <label
                           htmlFor="apiKey"
@@ -108,8 +151,11 @@ const PaymentModals = ({ isPaymentModalOpen, setIsPaymentModalOpen }) => {
                         </label>
                         <input
                           type="number"
+                          id="maximumAmount"
                           className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="100000"
+                          name="maximumAmount"
+                          value={inputValue.maximumAmount}
+                          onChange={handleInputChange}
                         />
                         <div className="">
                           <label
@@ -122,6 +168,9 @@ const PaymentModals = ({ isPaymentModalOpen, setIsPaymentModalOpen }) => {
                             <input
                               type="number"
                               id="feePercentage"
+                              name="feePercentage"
+                              value={inputValue.feePercentage}
+                              onChange={handleInputChange}
                               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                             <VscPercentage className="absolute right-5 size-5 w-[30px] text-gray-500" />
@@ -137,7 +186,10 @@ const PaymentModals = ({ isPaymentModalOpen, setIsPaymentModalOpen }) => {
                           <div className="relative mt-1 flex items-center">
                             <input
                               type="number"
-                              id="feePercentage"
+                              id="bonusPercentage"
+                              name="bonusPercentage"
+                              value={inputValue.bonusPercentage}
+                              onChange={handleInputChange}
                               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                             <VscPercentage className="absolute right-5 size-5 w-[30px] text-gray-500" />
@@ -153,7 +205,10 @@ const PaymentModals = ({ isPaymentModalOpen, setIsPaymentModalOpen }) => {
                           <div className="relative mt-1 flex items-center">
                             <input
                               type="number"
-                              id="feePercentage"
+                              id="bonusStartAmount"
+                              name="bonusStartAmount"
+                              value={inputValue.bonusStartAmount}
+                              onChange={handleInputChange}
                               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                             <VscPercentage className="absolute right-5 size-5 w-[30px] text-gray-500" />
@@ -169,6 +224,7 @@ const PaymentModals = ({ isPaymentModalOpen, setIsPaymentModalOpen }) => {
                           >
                             <div>
                               <MenuButton className="inline-flex justify-between w-full gap-x-1.5 rounded-md px-3 py-2 font-medium text-sm bg-card text-card-foreground shadow-sm border border-border">
+                                {status}
                                 <FaCaretDown className="-mr-1 h-5 w-5 text-foreground" />
                               </MenuButton>
                             </div>
@@ -181,19 +237,21 @@ const PaymentModals = ({ isPaymentModalOpen, setIsPaymentModalOpen }) => {
                                 <MenuItem>
                                   <a
                                     href="#"
-                                    onClick={() => handleOptionClick("Yes")}
+                                    onClick={() => handleStatusClick("Active")}
                                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
                                   >
-                                    Yes
+                                    Active
                                   </a>
                                 </MenuItem>
                                 <MenuItem>
                                   <a
                                     href="#"
-                                    onClick={() => handleOptionClick("No")}
+                                    onClick={() =>
+                                      handleStatusClick("Inactive")
+                                    }
                                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
                                   >
-                                    No
+                                    Inactive
                                   </a>
                                 </MenuItem>
                               </div>
@@ -214,6 +272,88 @@ const PaymentModals = ({ isPaymentModalOpen, setIsPaymentModalOpen }) => {
                             formats={formats}
                           />
                         </div>
+                        {isPaymentModalOpen === "paytm" ? (
+                          <>
+                            <label
+                              htmlFor="apiKey"
+                              className="block text-sm font-medium text-gray-700 mt-4"
+                            >
+                              Merchant ID
+                            </label>
+                            <input
+                              type="text"
+                              className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              id="merchantId"
+                              name="merchantId"
+                              value={inputValue.merchantId}
+                              onChange={handleInputChange}
+                            />
+                          </>
+                        ) : isPaymentModalOpen === "phonepay" ? (
+                          <>
+                            <label
+                              htmlFor="apiKey"
+                              className="block text-sm font-medium text-gray-700 mt-4"
+                            >
+                              Gmail Address
+                            </label>
+                            <input
+                              type="text"
+                              className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              id="gmailAddress"
+                              name="gmailAddress"
+                              value={inputValue.gmailAddress}
+                              onChange={handleInputChange}
+                            />
+                            <label
+                              htmlFor="apiKey"
+                              className="block text-sm font-medium text-gray-700 mt-4"
+                            >
+                              App Password
+                            </label>
+                            <input
+                              type="text"
+                              className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              id="appPassword"
+                              name="appPassword"
+                              value={inputValue.appPassword}
+                              onChange={handleInputChange}
+                            />
+                          </>
+                        ) : isPaymentModalOpen === "razorpay" ? (
+                          <>
+                            <label
+                              htmlFor="apiKey"
+                              className="block text-sm font-medium text-gray-700 mt-4"
+                            >
+                              API Public Key
+                            </label>
+                            <input
+                              type="text"
+                              className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              id="apiPublicKey"
+                              name="apiPublicKey"
+                              value={inputValue.apiPublicKey}
+                              onChange={handleInputChange}
+                            />
+                            <label
+                              htmlFor="apiKey"
+                              className="block text-sm font-medium text-gray-700 mt-4"
+                            >
+                              API Secret Key
+                            </label>
+                            <input
+                              type="text"
+                              className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              id="apiSecretKey"
+                              name="apiSecretKey"
+                              value={inputValue.apiSecretKey}
+                              onChange={handleInputChange}
+                            />
+                          </>
+                        ) : (
+                          ""
+                        )}
                         <div className="mt-4 flex justify-end space-x-2">
                           <button
                             type="button"
