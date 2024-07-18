@@ -29,6 +29,7 @@ import Error404 from "./pages/Admin/Error404";
 import Sellers from "./components/Admin/Sellers";
 import GeneralSetting from "./components/Admin/GeneralSetting";
 import PaymentMethod from "./components/Admin/PaymentMethod";
+import ServiceForm from "./components/Admin/ServicesForm";
 
 const Loading = () => <p>Loading...</p>;
 
@@ -90,6 +91,7 @@ const App = () => {
           <Route path="/admin/tasks" element={<Task />} />
           <Route path="/admin/update-price" element={<UpdatePrice />} />
           <Route path="/admin/category-sort" element={<CategorySort />} />
+          <Route path="/services" element={<ServiceForm />} />
           {isAdminLoginPage && (
             <Route path="/admin/login" element={<AdminLogin />} />
           )}

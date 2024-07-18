@@ -1,186 +1,167 @@
-import * as React from "react";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import Checkbox from "@mui/material/Checkbox";
-import IconButton from "@mui/material/IconButton";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-
-const theme = createTheme({
-  components: {
-    MuiTableContainer: {
-      styleOverrides: {
-        root: {
-          marginTop: "20px",
-        },
-      },
-    },
-    MuiTableCell: {
-      styleOverrides: {
-        root: {
-          padding: "2px 5px",
-        },
-      },
-    },
-    MuiTableRow: {
-      styleOverrides: {
-        root: {
-          "&:nth-of-type(even)": {
-            backgroundColor: "#f5f5f5",
-          },
-        },
-      },
-    },
-  },
-});
-
-function createData(
-  id,
-  service,
-  serviceType,
-  refill,
-  cancel,
-  provider,
-  min,
-  max,
-  status
-) {
-  return {
-    id,
-    service,
-    serviceType,
-    refill,
-    cancel,
-    provider,
-    min,
-    max,
-    status,
-  };
-}
-
-const rows = [
-  createData(
-    270,
-    "INSTAGRAM VIEWS - FAST Speed [ Start :0-15Min ] S2",
-    "Default",
-    "Off",
-    "Off",
-    "hackintown.in",
-    10,
-    2147483647,
-    "Enabled"
-  ),
-  createData(
-    271,
-    "INSTAGRAM VIEWS - SUPER Fast Speed [ Start :0-10Min ] [ Cancel button ] S3",
-    "Default",
-    "Off",
-    "Off",
-    "hackintown.in",
-    10,
-    90000000,
-    "Enabled"
-  ),
-  createData(
-    272,
-    "INSTAGRAM VIEWS - ULTRA FAST Speed [ RECOMMENDED ]",
-    "Default",
-    "Off",
-    "Off",
-    "hackintown.in",
-    100,
-    99999999,
-    "Enabled"
-  ),
-  createData(
-    273,
-    "INSTAGRAM VIEWS - Fast Speed [ Start :0-40Min ] Cheapest",
-    "Default",
-    "Off",
-    "Off",
-    "hackintown.in",
-    100,
-    90000000,
-    "Enabled"
-  ),
-  createData(
-    274,
-    "INSTAGRAM LIKES - BOT Mix - NON Refill [ 0-10min ]",
-    "Default",
-    "Off",
-    "Off",
-    "hackintown.in",
-    10,
-    200000,
-    "Enabled"
-  ),
-];
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchServices } from "../../../features/servicesSlice";
+import { MdModeEdit } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 
 const ServicesTable = () => {
-  const handleEdit = (id) => {
-    alert(`Edit service with ID: ${id}`);
+  const dispatch = useDispatch();
+  const { services, categories, loading, error } = useSelector(
+    (state) => state.services
+  );
+
+  const [checked, setChecked] = useState(false);
+  const [checkedServices, setCheckedServices] = useState({});
+
+  useEffect(() => {
+    dispatch(fetchServices());
+  }, [dispatch]);
+
+  const handleCheckboxChange = () => {
+    setChecked(!checked);
+    if (!checked) {
+      const checkedServicesObj = {};
+      categories.forEach((category) => {
+        checkedServicesObj[category] = services
+          .filter((service) => service.category === category)
+          .map((service) => service.id);
+      });
+      setCheckedServices(checkedServicesObj);
+    } else {
+      setCheckedServices({});
+    }
   };
 
-  const handleDelete = (id) => {
-    alert(`Delete service with ID: ${id}`);
+  const handleServiceCheckboxChange = (serviceId, categoryId) => {
+    if (checkedServices[categoryId]) {
+      const serviceIds = checkedServices[categoryId];
+      if (serviceIds.includes(serviceId)) {
+        serviceIds.splice(serviceIds.indexOf(serviceId), 1);
+      } else {
+        serviceIds.push(serviceId);
+      }
+      setCheckedServices((prevCheckedServices) => ({
+        ...prevCheckedServices,
+        [categoryId]: serviceIds,
+      }));
+    }
   };
+
+  const checkedServicesCount = Object.values(checkedServices).reduce(
+    (acc, serviceIds) => acc + serviceIds.length,
+    0
+  );
 
   return (
-    <ThemeProvider theme={theme}>
-      <TableContainer component={Paper}>
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell padding="checkbox">
-                <Checkbox />
-              </TableCell>
-              <TableCell>ID</TableCell>
-              <TableCell>Service</TableCell>
-              <TableCell>Service Type</TableCell>
-              <TableCell>Refill</TableCell>
-              <TableCell>Cancel</TableCell>
-              <TableCell>Provider</TableCell>
-              <TableCell>Min</TableCell>
-              <TableCell>Max</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell padding="checkbox">
-                  <Checkbox />
-                </TableCell>
-                <TableCell>{row.id}</TableCell>
-                <TableCell>{row.service}</TableCell>
-                <TableCell>{row.serviceType}</TableCell>
-                <TableCell>{row.refill}</TableCell>
-                <TableCell>{row.cancel}</TableCell>
-                <TableCell>{row.provider}</TableCell>
-                <TableCell>{row.min}</TableCell>
-                <TableCell>{row.max}</TableCell>
-                <TableCell>{row.status}</TableCell>
-                <TableCell>
-                  <IconButton onClick={() => handleEdit(row.id)}>
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton onClick={() => handleDelete(row.id)}>
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </ThemeProvider>
+    <div className="max-w-screen-xl mx-auto py-8">
+      <table className="w-full bg-card my-2 border border-border shadow-sm relative">
+        <thead className="shadow-sm border-b">
+          <tr>
+            <th scope="col" className="w-2 px-2 py-2">
+              <div className="relative">
+                <input
+                  type="checkbox"
+                  checked={checked}
+                  onChange={handleCheckboxChange}
+                />
+              </div>
+              {checked && (
+                <div className="flex items-center gap-x-2 absolute top-2 left-8">
+                  <span className="text-sm font-medium whitespace-nowrap border border-border inline-block bg-white px-1 py-0.5 rounded-sm shadow-sm">
+                    {checkedServicesCount} Services Selected
+                  </span>
+                  <button className="text-sm font-medium px-1 py-0.5">
+                    Batch Operation
+                  </button>
+                </div>
+              )}
+            </th>
+            <th scope="col" className="text-left w-2 px-2 py-1 font-medium">
+              ID
+            </th>
+            <th scope="col" className="text-left px-2 py-1 font-medium">
+              Service
+            </th>
+            <th scope="col" className="px-2 py-1 font-medium  text-left">
+              Service Type
+            </th>
+            <th scope="col" className="px-2 py-1 font-medium  text-left">
+              Refill
+            </th>
+            <th scope="col" className="px-2 py-1 font-medium  text-left">
+              Cancell
+            </th>
+            <th scope="col" className="px-2 py-1 font-medium  text-left">
+              Price
+            </th>
+            <th scope="col" className="px-2 py-1 font-medium  text-left">
+              Min
+            </th>
+            <th scope="col" className="px-2 py-1 font-medium  text-left">
+              Max
+            </th>
+            <th scope="col" className="px-2 py-1 font-medium  text-left">
+              Status
+            </th>
+            <th scope="col" className="px-2 py-1 font-medium  text-left">
+              Action
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {categories.map((category) => (
+            <React.Fragment key={category}>
+              <tr className="border-b border-border">
+                <td
+                  colSpan={10}
+                  className="text-left px-2 py-1 font-medium text-black text-md"
+                >
+                  {category}
+                </td>
+                <td className="flex items-center">
+                  <MdModeEdit className="size-5 text-primary" />{" "}
+                  <MdDelete className="size-5 text-destructive" />
+                </td>
+              </tr>
+              {services
+                .filter((service) => service.category === category)
+                .map((service) => (
+                  <tr key={service.id} className="border-b border-border">
+                    <td className="w-2 px-2 py-1">
+                      <input
+                        type="checkbox"
+                        checked={
+                          checkedServices[category] &&
+                          checkedServices[category].includes(service.id)
+                        }
+                        onChange={() =>
+                          handleServiceCheckboxChange(service.id, category)
+                        }
+                      />
+                    </td>
+                    <td className="text-left w-2 px-2 py-1 text-md">
+                      {service.service}
+                    </td>
+                    <td className="px-2 py-1 text-sm">{service.name}</td>
+                    <td className="px-2 py-1 text-sm">{service.type}</td>
+                    <td className="px-2 py-1 text-sm">
+                      {service.refill ? "Yes" : "No"}
+                    </td>
+                    <td className="px-2 py-1 text-sm">
+                      {service.cancel ? "Yes" : "No"}
+                    </td>
+                    <td className="px-2 py-1 text-sm">{service.rate}</td>
+                    <td className="px-2 py-1 text-sm">{service.min}</td>
+                    <td className="px-2 py-1 text-sm">{service.max}</td>
+                    <td className="px-2 py-1 text-sm">Enabled</td>
+                    <td className="px-2 py-1 text-sm">{service.action}</td>
+                  </tr>
+                ))}
+            </React.Fragment>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 
