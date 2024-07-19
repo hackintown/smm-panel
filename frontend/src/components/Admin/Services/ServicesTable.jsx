@@ -109,8 +109,8 @@ const ServicesTable = () => {
           </tr>
         </thead>
         <tbody>
-          {categories.map((category) => (
-            <React.Fragment key={category}>
+          {categories.map((category, index) => (
+            <React.Fragment key={`category-${index}`}>
               <tr className="border-b border-border">
                 <td
                   colSpan={10}
@@ -125,8 +125,11 @@ const ServicesTable = () => {
               </tr>
               {services
                 .filter((service) => service.category === category)
-                .map((service) => (
-                  <tr key={service.id} className="border-b border-border">
+                .map((service, serviceIndex) => (
+                  <tr
+                    key={`service-${service.id || serviceIndex}`}
+                    className="border-b border-border"
+                  >
                     <td className="w-2 px-2 py-1">
                       <input
                         type="checkbox"

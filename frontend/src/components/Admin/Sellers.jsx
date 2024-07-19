@@ -3,6 +3,10 @@ import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { FaCaretDown } from "react-icons/fa6";
 import { MdEditSquare } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
+import axios from "axios";
+import config from "../../config";
+
+const apiUrl = config.apiBaseUrl;
 const data = [
   { id: 1, provider: "SMM Panel-1", balance: "20" },
   { id: 2, provider: "SMM Panel-2", balance: "10" },
@@ -10,11 +14,15 @@ const data = [
 
 const Sellers = () => {
   const [isProviderOpen, setIsProviderOpen] = useState(false);
-  const [inputValue, setInputValue] = useState("");
+  const [inputApiUrl, setInputApiUrl] = useState("");
+  const [inputApiKey, setInputApiKey] = useState("");
   const [selectedOption, setSelectedOption] = useState("No");
   const closeOutClick = useRef(null);
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
+  const handleApiUrlChange = (e) => {
+    setInputApiUrl(e.target.value);
+  };
+  const handleApiKeyChange = (e) => {
+    setInputApiKey(e.target.value);
   };
 
   const handleProviderOpen = () => {
@@ -37,6 +45,20 @@ const Sellers = () => {
       setIsProviderOpen(false);
     } else {
       console.log("Clicked inside modal");
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(`${apiUrl}/api/add-provider`, {
+        apiUrl: inputApiUrl,
+        apiKey: inputApiKey,
+      });
+      console.log(response.data);
+      setIsProviderOpen(false);
+    } catch (error) {
+      console.error("Error adding provider:", error);
     }
   };
 
@@ -76,7 +98,7 @@ const Sellers = () => {
                       Add New Provider
                     </h3>
                     <div className="my-5 px-3.5">
-                      <form>
+                      <form onSubmit={handleSubmit}>
                         <label
                           htmlFor="apiUrl"
                           className="block text-sm font-medium text-gray-700"
@@ -88,8 +110,8 @@ const Sellers = () => {
                           id="apiUrl"
                           className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           placeholder="Enter API URL"
-                          value={inputValue}
-                          onChange={handleInputChange}
+                          value={inputApiUrl}
+                          onChange={handleApiUrlChange}
                         />
                         <label
                           htmlFor="apiKey"
@@ -102,6 +124,8 @@ const Sellers = () => {
                           id="apiKey"
                           className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           placeholder="Enter API Key"
+                          value={inputApiKey}
+                          onChange={handleApiKeyChange}
                         />
                         <div className="flex flex-col space-y-1.5 mb-2 mt-2.5">
                           <label className="block text-foreground font-medium">
@@ -178,12 +202,6 @@ const Sellers = () => {
                 scope="col"
                 className="px-6 py-3 text-left text-sm font-medium text-secondary-foreground uppercase tracking-wider"
               >
-                ID
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-sm font-medium text-secondary-foreground uppercase tracking-wider"
-              >
                 Provider
               </th>
               <th
@@ -203,9 +221,6 @@ const Sellers = () => {
           <tbody className="divide-y">
             {data.map((item) => (
               <tr key={item.id} className="hover:bg-gray-100">
-                <td className="px-6 py-3 whitespace-nowrap text-sm font-medium text-foreground">
-                  {item.id}
-                </td>
                 <td className="px-6 py-3 whitespace-nowrap text-sm text-foreground">
                   {item.provider}
                 </td>

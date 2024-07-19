@@ -1,6 +1,8 @@
 import React from "react";
 import { FaCirclePlus } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 const ServicesIndex = () => {
+  const navigate = useNavigate();
   return (
     <div className="flex justify-between">
       <div className="flex gap-x-3">
@@ -47,7 +49,7 @@ const ServicesIndex = () => {
             </span>
           </button>
         </div>
-        <button className="flex items-center gap-x-1 bg-primary text-primary-foreground py-[0.32rem] px-3 rounded-sm shadow-sm">
+        <button onClick={() => navigate("/admin/api-services")} className="flex items-center gap-x-1 bg-primary text-primary-foreground py-[0.32rem] px-3 rounded-sm shadow-sm">
           <FaCirclePlus className="size-5" /> Import Services
         </button>
       </div>

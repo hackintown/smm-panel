@@ -17,4 +17,7 @@ router.post("/multipleRefillStatuses", servicesCtrl.getMultipleRefillStatuses);
 router.post("/createCancel", servicesCtrl.createCancel);
 router.post("/userBalance", servicesCtrl.getUserBalance);
 
+//Api Provider routes for new api services
+router.post("/add-provider", servicesCtrl.addProvider);
+
 module.exports = router;

@@ -30,7 +30,7 @@ import Sellers from "./components/Admin/Sellers";
 import GeneralSetting from "./components/Admin/GeneralSetting";
 import PaymentMethod from "./components/Admin/PaymentMethod";
 import ServiceForm from "./components/Admin/ServicesForm";
-
+import ApiServices from "./pages/Admin/ApiServices";
 const Loading = () => <p>Loading...</p>;
 
 const UserRoutes = ({ user, role }) =>
@@ -91,6 +91,7 @@ const App = () => {
           <Route path="/admin/tasks" element={<Task />} />
           <Route path="/admin/update-price" element={<UpdatePrice />} />
           <Route path="/admin/category-sort" element={<CategorySort />} />
+          <Route path="/admin/api-services" element={<ApiServices />} />
           <Route path="/services" element={<ServiceForm />} />
           {isAdminLoginPage && (
             <Route path="/admin/login" element={<AdminLogin />} />
