@@ -13,6 +13,7 @@ const makeApiRequest = async (params) => {
     const response = await axios.post(apiUrl, {
       ...params,
       key: provider.apiKey,
+      action: 'services',
     });
     return response.data;
   } catch (error) {

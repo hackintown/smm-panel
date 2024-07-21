@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchServices } from "../../../features/servicesSlice";
+import {
+  fetchServices,
+  setSelectedServices,
+} from "../../../features/servicesSlice";
 import { MdModeEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 
@@ -10,41 +13,73 @@ const ServicesTable = () => {
     (state) => state.services
   );
 
-  const [checked, setChecked] = useState(false);
-  const [checkedServices, setCheckedServices] = useState({});
+  const [checked, setChecked] = useState(false); // toggle to select all services
+  const [checkedServices, setCheckedServices] = useState({}); // store selected services by category
 
   useEffect(() => {
-    dispatch(fetchServices());
+    dispatch(fetchServices()); // fetch services when component mounts
   }, [dispatch]);
 
   const handleCheckboxChange = () => {
-    setChecked(!checked);
+    setChecked(!checked); // toggle checked state
     if (!checked) {
       const checkedServicesObj = {};
       categories.forEach((category) => {
-        checkedServicesObj[category] = services
+        const serviceIds = services
           .filter((service) => service.category === category)
           .map((service) => service.id);
+        if (serviceIds.length > 0) {
+          checkedServicesObj[category] = serviceIds;
+        }
       });
-      setCheckedServices(checkedServicesObj);
+      setCheckedServices(checkedServicesObj); // select all services in each category
     } else {
-      setCheckedServices({});
+      setCheckedServices({}); // deselect all services
     }
   };
 
   const handleServiceCheckboxChange = (serviceId, categoryId) => {
-    if (checkedServices[categoryId]) {
-      const serviceIds = checkedServices[categoryId];
-      if (serviceIds.includes(serviceId)) {
-        serviceIds.splice(serviceIds.indexOf(serviceId), 1);
-      } else {
-        serviceIds.push(serviceId);
-      }
-      setCheckedServices((prevCheckedServices) => ({
-        ...prevCheckedServices,
-        [categoryId]: serviceIds,
-      }));
+    const serviceIds = checkedServices[categoryId] || [];
+    if (serviceIds.includes(serviceId)) {
+      serviceIds.splice(serviceIds.indexOf(serviceId), 1); // remove service ID if already selected
+    } else {
+      serviceIds.push(serviceId); // add service ID if not selected
     }
+    setCheckedServices((prevCheckedServices) => ({
+      ...prevCheckedServices,
+      [categoryId]: serviceIds,
+    }));
+  };
+
+  // Handle batch operation
+  const handleBatchOperation = () => {
+    const selectedServicesObj = {};
+    categories.forEach((category) => {
+      if (checkedServices[category]) {
+        // Add this check
+        selectedServicesObj[category] = services
+          .filter(
+            (service) =>
+              service.category === category &&
+              checkedServices[category].includes(service.id)
+          )
+          .map((service) => ({
+            id: service.service,
+            name: service.name,
+            type: service.type,
+            refill: service.refill,
+            cancel: service.cancel,
+            rate: service.rate,
+            min: service.min,
+            max: service.max,
+          }));
+      }
+    });
+    dispatch(setSelectedServices(selectedServicesObj)); // Update selected services in Redux store
+    console.log(
+      "Selected services have been dispatched to the store:",
+      selectedServicesObj
+    );
   };
 
   const checkedServicesCount = Object.values(checkedServices).reduce(
@@ -65,16 +100,18 @@ const ServicesTable = () => {
                   onChange={handleCheckboxChange}
                 />
               </div>
-              {checked && (
-                <div className="flex items-center gap-x-2 absolute top-2 left-8">
-                  <span className="text-sm font-medium whitespace-nowrap border border-border inline-block bg-white px-1 py-0.5 rounded-sm shadow-sm">
-                    {checkedServicesCount} Services Selected
-                  </span>
-                  <button className="text-sm font-medium px-1 py-0.5">
-                    Batch Operation
-                  </button>
-                </div>
-              )}
+
+              <div className="flex items-center gap-x-2 absolute -top-8 left-0">
+                <span className="text-sm font-medium whitespace-nowrap border border-border inline-block bg-white px-1 py-0.5 rounded-sm shadow-sm">
+                  {checkedServicesCount} Services Selected
+                </span>
+                <button
+                  onClick={handleBatchOperation}
+                  className="text-sm font-medium px-1 py-0.5"
+                >
+                  Batch Operation
+                </button>
+              </div>
             </th>
             <th scope="col" className="text-left w-2 px-2 py-1 font-medium">
               ID

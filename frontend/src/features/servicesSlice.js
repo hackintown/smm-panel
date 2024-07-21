@@ -15,15 +15,19 @@ export const fetchServices = createAsyncThunk(
 const servicesSlice = createSlice({
   name: "services",
   initialState: {
-    categories: [],
-    services: [],
-    selectedCategory: "",
-    loading: false,
-    error: null,
+    categories: [], // Array to hold unique categories
+    services: [], // Array to hold services fetched from the API
+    selectedCategory: "", // Selected category for filtering services
+    selectedServices: [], // Array to hold selected services for display
+    loading: false, // Loading state for API calls
+    error: null, // Error state for API calls
   },
   reducers: {
     setSelectedCategory: (state, action) => {
       state.selectedCategory = action.payload;
+    },
+    setSelectedServices: (state, action) => {
+      state.selectedServices = action.payload; // Set the selected services
     },
   },
   extraReducers: (builder) => {
@@ -33,7 +37,8 @@ const servicesSlice = createSlice({
       })
       .addCase(fetchServices.fulfilled, (state, action) => {
         state.loading = false;
-        state.services = action.payload;
+        state.services = action.payload; /// Store fetched services
+        // Extract unique categories from services
         state.categories = [
           ...new Set(action.payload.map((service) => service.category)),
         ];
@@ -45,5 +50,8 @@ const servicesSlice = createSlice({
   },
 });
 
-export const { setSelectedCategory } = servicesSlice.actions;
+// Export actions and reducer
+
+export const { setSelectedCategory, setSelectedServices } =
+  servicesSlice.actions;
 export default servicesSlice.reducer;
