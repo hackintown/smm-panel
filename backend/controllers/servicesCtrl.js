@@ -13,7 +13,6 @@ const makeApiRequest = async (params) => {
     const response = await axios.post(apiUrl, {
       ...params,
       key: provider.apiKey,
-      action: 'services',
     });
     return response.data;
   } catch (error) {
@@ -55,18 +54,20 @@ exports.addProvider = async (req, res) => {
 };
 
 exports.getServices = async (req, res) => {
-  const { key, action } = req.body;
+  const params = {
+    action: "services", // Default action
+  };
 
   try {
     // Fetch services data from API
-    const servicesData = await makeApiRequest({ key, action });
+    const servicesData = await makeApiRequest(params);
     // Validate the format of the data if necessary
     if (!Array.isArray(servicesData)) {
       throw new Error("Services data is not an array");
     }
 
-   // Log the data for debugging
-   console.log("Fetched services data:", servicesData);
+    // Log the data for debugging
+    console.log("Fetched services data:", servicesData);
 
     await Services.insertMany(servicesData);
     res.status(200).json({ message: "Services updated successfully" });
@@ -88,14 +89,12 @@ exports.getAllServices = async (req, res) => {
 
 // Add order
 exports.addOrder = async (req, res) => {
-  const { service, link, quantity, runs, interval } = req.body;
+  const { service, link, quantity} = req.body;
   const params = {
     action: "add",
     service,
     link,
     quantity,
-    runs,
-    interval,
   };
 
   try {

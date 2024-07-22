@@ -11,7 +11,19 @@ export const fetchServices = createAsyncThunk(
     return response.data;
   }
 );
-
+//Create New Order
+export const addOrder = createAsyncThunk(
+  "services/addOrder",
+  async (orderData) => {
+    try {
+      const response = await axios.post(`${apiUrl}/api/addOrder`, orderData);
+      return response.data;
+    } catch (error) {
+      console.error("Error adding order:", error);
+      throw error;
+    }
+  }
+);
 const servicesSlice = createSlice({
   name: "services",
   initialState: {
@@ -21,6 +33,7 @@ const servicesSlice = createSlice({
     selectedServices: [], // Array to hold selected services for display
     loading: false, // Loading state for API calls
     error: null, // Error state for API calls
+    orderCreated: false, // Flag to indicate if an order has been created
   },
   reducers: {
     setSelectedCategory: (state, action) => {
@@ -44,6 +57,17 @@ const servicesSlice = createSlice({
         ];
       })
       .addCase(fetchServices.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(addOrder.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(addOrder.fulfilled, (state, action) => {
+        state.loading = false;
+        state.orderCreated = true; // Set flag to indicate order creation
+      })
+      .addCase(addOrder.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });

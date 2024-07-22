@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import { FaUsers } from "react-icons/fa";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { FaCaretDown } from "react-icons/fa6";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addOrder } from "../../features/servicesSlice";
 const Content = () => {
   const { loading, error, selectedServices } = useSelector(
     (state) => state.services
   );
-  console.log(selectedServices);
   const categories = Object.keys(selectedServices);
-  console.log(categories);
 
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedService, setSelectedService] = useState(null);
+  const dispatch = useDispatch();
+  const [link, setLink] = useState("");
+  const [quantity, setQuantity] = useState(0);
 
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
@@ -25,6 +25,18 @@ const Content = () => {
       (s) => s.id === serviceId
     );
     setSelectedService(service);
+  };
+
+  const handleNewOrder = (e) => {
+    e.preventDefault();
+    if (!selectedService) return;
+    const orderData = {
+      service: selectedService.id,
+      link,
+      quantity,
+    };
+  console.log(orderData)
+    dispatch(addOrder(orderData));
   };
 
   return (
@@ -47,123 +59,144 @@ const Content = () => {
           </div>
         </div>
       )}
-      {error && (
-        <div className="flex justify-center">
-          <div
-            className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-            role="alert"
-          >
-            {error}
-          </div>
-        </div>
-      )}
       <div className="rounded-lg shadow-lg border border-border w-full max-w-[950px] bg-card py-2">
-        <ul className="p-5 flex flex-col gap-y-4">
-          <li className="flex flex-col gap-y-2">
-            <label htmlFor="category" className="text-foreground font-semibold">
-              Category
-            </label>
-            <select
-              id="category"
-              className="block w-full bg-background text-foreground border border-border shadow-sm 
+        <form onSubmit={handleNewOrder}>
+          <ul className="p-5 flex flex-col gap-y-4">
+            <li className="flex flex-col gap-y-2">
+              <label
+                htmlFor="category"
+                className="text-foreground font-semibold"
+              >
+                Category
+              </label>
+              <select
+                id="category"
+                className="block w-full bg-background text-foreground border border-border shadow-sm 
               outline-none focus:border-ring rounded-sm py-2 px-2"
-              value={selectedCategory}
-              onChange={handleCategoryChange}
-            >
-              <option value="">Select a category</option>
-              {categories.map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
-          </li>
-          <li className="flex flex-col gap-y-2">
-            <label htmlFor="category" className="text-foreground font-semibold">
-              Services
-            </label>
-            <select
-              id="service"
-              className="block w-full bg-background text-foreground border border-border shadow-sm 
-              outline-none focus:border-ring rounded-sm py-2 px-2"
-              value={selectedService ? selectedService.id : ""}
-              onChange={handleServiceChange}
-              disabled={!selectedCategory}
-            >
-              <option value="">Select a service</option>
-              {selectedCategory &&
-                selectedServices[selectedCategory].map((service) => (
-                  <option key={service.id} value={service.id}>
-                    {service.name}
+                value={selectedCategory}
+                onChange={handleCategoryChange}
+              >
+                <option value="">Select a category</option>
+                {categories.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
                   </option>
                 ))}
-            </select>
-          </li>
-          <li className="flex flex-col gap-y-2">
-            <label htmlFor="category" className="text-foreground font-semibold">
-              Avgerage Time
-            </label>
-            <div className="">
-              <input
-                type="text"
-                value={
-                  selectedService ? selectedService.time : "Not enough data"
-                }
-                className="border border-border px-2 py-1.5 w-full rounded-md shadow-sm bg-card text-card-foreground outline-none"
-              />
-            </div>
-          </li>
-          <li className="flex flex-col gap-y-2">
-            <label htmlFor="category" className="text-foreground font-semibold">
-              Link
-            </label>
-            <div className="">
-              <input
-                type="text"
-                className="border border-border px-2 py-1.5 w-full rounded-md shadow-sm bg-card text-card-foreground outline-none"
-                placeholder="Link"
-              />
-            </div>
-          </li>
-          <li className="flex flex-col gap-y-2">
-            <label htmlFor="category" className="text-foreground font-semibold">
-              Quantity
-            </label>
-            <div className="">
-              <input
-                type="text"
-                className="border border-border px-2 py-1.5 w-full rounded-md shadow-sm bg-card text-card-foreground outline-none"
-                placeholder="Quantity"
-              />
-              <div className="flex gap-x-2 my-1 mx-1">
-                <p className="text-sm text-foreground">
-                  Min: {selectedService ? selectedService.min : 0}{" "}
-                </p>
-                <p className="text-sm text-foreground">
-                  Max: {selectedService ? selectedService.max : 0}
-                </p>
+              </select>
+            </li>
+            <li className="flex flex-col gap-y-2">
+              <label
+                htmlFor="category"
+                className="text-foreground font-semibold"
+              >
+                Services
+              </label>
+              <select
+                id="service"
+                className="block w-full bg-background text-foreground border border-border shadow-sm 
+              outline-none focus:border-ring rounded-sm py-2 px-2"
+                value={selectedService ? selectedService.id : ""}
+                onChange={handleServiceChange}
+                disabled={!selectedCategory}
+              >
+                <option value="">Select a service</option>
+                {selectedCategory &&
+                  selectedServices[selectedCategory].map((service) => (
+                    <option key={service.id} value={service.id}>
+                      {service.name}
+                    </option>
+                  ))}
+              </select>
+            </li>
+            <li className="flex flex-col gap-y-2">
+              <label
+                htmlFor="category"
+                className="text-foreground font-semibold"
+              >
+                Avgerage Time
+              </label>
+              <div className="">
+                <input
+                  type="text"
+                  value={
+                    selectedService ? selectedService.time : "Not enough data"
+                  }
+                  className="border border-border px-2 py-1.5 w-full rounded-md shadow-sm bg-card text-card-foreground outline-none"
+                />
               </div>
-            </div>
-          </li>
-          <li className="flex flex-col gap-y-2">
-            <label htmlFor="category" className="text-foreground font-semibold">
-              Charges
-            </label>
-            <div className="">
-              <input
-                type="text"
-                value={selectedService ? `₹ ${selectedService.rate}` : "₹ 0.00"}
-                readOnly
-                className="border border-border px-2 py-1.5 w-full rounded-md shadow-sm bg-muted text-muted-foreground outline-none"
-              />
-            </div>
-          </li>
-          <li>
-            <button className="w-full bg-primary text-primary-foreground px-3 py-2.5 rounded-lg shadow-sm">
-              New Order
-            </button>
-          </li>
-        </ul>
+            </li>
+            <li className="flex flex-col gap-y-2">
+              <label
+                htmlFor="category"
+                className="text-foreground font-semibold"
+              >
+                Link
+              </label>
+              <div className="">
+                <input
+                  type="text"
+                  className="border border-border px-2 py-1.5 w-full rounded-md shadow-sm bg-card text-card-foreground outline-none"
+                  placeholder="Link"
+                  value={link}
+                  onChange={(e) => setLink(e.target.value)}
+                />
+              </div>
+            </li>
+            <li className="flex flex-col gap-y-2">
+              <label
+                htmlFor="category"
+                className="text-foreground font-semibold"
+              >
+                Quantity
+              </label>
+              <div className="">
+                <input
+                  type="text"
+                  id="quantity"
+                  className="border border-border px-2 py-1.5 w-full rounded-md shadow-sm bg-card text-card-foreground outline-none"
+                  placeholder="Quantity"
+                  value={quantity}
+                  onChange={(e) => setQuantity(e.target.value)}
+                />
+                <div className="flex gap-x-2 my-1 mx-1">
+                  <p className="text-sm text-foreground">
+                    Min: {selectedService ? selectedService.min : 0}{" "}
+                  </p>
+                  <p className="text-sm text-foreground">
+                    Max: {selectedService ? selectedService.max : 0}
+                  </p>
+                </div>
+              </div>
+            </li>
+            <li className="flex flex-col gap-y-2">
+              <label
+                htmlFor="category"
+                className="text-foreground font-semibold"
+              >
+                Charges
+              </label>
+              <div className="">
+                <input
+                  type="text"
+                  value={
+                    selectedService ? `₹ ${selectedService.rate}` : "₹ 0.00"
+                  }
+                  readOnly
+                  className="border border-border px-2 py-1.5 w-full rounded-md shadow-sm bg-muted text-muted-foreground outline-none"
+                />
+              </div>
+            </li>
+            <li>
+              <button
+                type="submit"
+                disabled={!selectedService}
+                className="w-full bg-primary text-primary-foreground px-3 py-2.5 rounded-lg shadow-sm"
+              >
+                New Order
+              </button>
+            </li>
+          </ul>
+        </form>
       </div>
     </div>
   );
