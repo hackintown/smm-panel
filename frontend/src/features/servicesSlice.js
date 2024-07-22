@@ -11,6 +11,7 @@ export const fetchServices = createAsyncThunk(
     return response.data;
   }
 );
+
 //Create New Order
 export const addOrder = createAsyncThunk(
   "services/addOrder",
@@ -24,6 +25,53 @@ export const addOrder = createAsyncThunk(
     }
   }
 );
+
+//Get Order Status
+export const getOrderStatus = createAsyncThunk(
+  "services/getOrderStatus",
+  async (orderId) => {
+    try {
+      const response = await axios.post(`${apiUrl}/api/orderStatus`, {
+        order: orderId,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching order status:", error);
+      throw error;
+    }
+  }
+);
+
+//Get User Balance
+export const getUserBalance = createAsyncThunk(
+  "services/getUserBalance",
+  async () => {
+    try {
+      const response = await axios.post(`${apiUrl}/api/userBalance`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching user balance:", error);
+      throw error;
+    }
+  }
+);
+
+// Create Refill
+export const createRefill = createAsyncThunk(
+  "services/createRefill",
+  async (orderId) => {
+    try {
+      const response = await axios.post(`${apiUrl}/api/createRefill`, {
+        order: orderId,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error creating refill:", error);
+      throw error;
+    }
+  }
+);
+
 const servicesSlice = createSlice({
   name: "services",
   initialState: {
@@ -34,6 +82,9 @@ const servicesSlice = createSlice({
     loading: false, // Loading state for API calls
     error: null, // Error state for API calls
     orderCreated: false, // Flag to indicate if an order has been created
+    orderStatus: null,
+    balance: null,
+    refillStatus: null,
   },
   reducers: {
     setSelectedCategory: (state, action) => {
@@ -68,6 +119,39 @@ const servicesSlice = createSlice({
         state.orderCreated = true; // Set flag to indicate order creation
       })
       .addCase(addOrder.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(getOrderStatus.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getOrderStatus.fulfilled, (state, action) => {
+        state.loading = false;
+        state.orderStatus = action.payload;
+      })
+      .addCase(getOrderStatus.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(getUserBalance.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getUserBalance.fulfilled, (state, action) => {
+        state.loading = false;
+        state.balance = action.payload;
+      })
+      .addCase(getUserBalance.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(createRefill.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(createRefill.fulfilled, (state, action) => {
+        state.loading = false;
+        state.refillStatus = action.payload;
+      })
+      .addCase(createRefill.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });

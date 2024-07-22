@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { FaUsers } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { addOrder } from "../../features/servicesSlice";
+import { addOrder, getOrderStatus, getUserBalance, createRefill } from "../../features/servicesSlice";
 const Content = () => {
-  const { loading, error, selectedServices } = useSelector(
+  const { loading, error, selectedServices,  orderStatus, balance, refillStatus } = useSelector(
     (state) => state.services
   );
   const categories = Object.keys(selectedServices);
@@ -13,7 +13,7 @@ const Content = () => {
   const dispatch = useDispatch();
   const [link, setLink] = useState("");
   const [quantity, setQuantity] = useState(0);
-
+  const [orderId, setOrderId] = useState("");
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
     setSelectedService(null);
@@ -35,8 +35,20 @@ const Content = () => {
       link,
       quantity,
     };
-  console.log(orderData)
+    console.log(orderData);
     dispatch(addOrder(orderData));
+  };
+
+  const handleGetOrderStatus = () => {
+    dispatch(getOrderStatus(orderId));
+  };
+
+  const handleGetUserBalance = () => {
+    dispatch(getUserBalance());
+  };
+
+  const handleCreateRefill = () => {
+    dispatch(createRefill(orderId));
   };
 
   return (
@@ -197,6 +209,52 @@ const Content = () => {
             </li>
           </ul>
         </form>
+        <div className="mt-5">
+          <button
+            onClick={handleGetUserBalance}
+            className="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Check Balance
+          </button>
+          {balance && (
+            <div className="mt-2">
+              <strong>Balance:</strong> {balance.balance}
+            </div>
+          )}
+        </div>
+        <div className="mt-5">
+          <input
+            type="text"
+            placeholder="Order ID"
+            value={orderId}
+            onChange={(e) => setOrderId(e.target.value)}
+            className="border px-2 py-1 rounded"
+          />
+          <button
+            onClick={handleGetOrderStatus}
+            className="bg-blue-500 text-white px-4 py-2 ml-2 rounded"
+          >
+            Check Order Status
+          </button>
+          {orderStatus && (
+            <div className="mt-2">
+              <strong>Order Status:</strong> {orderStatus.status}
+            </div>
+          )}
+        </div>
+        <div className="mt-5">
+          <button
+            onClick={handleCreateRefill}
+            className="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Create Refill
+          </button>
+          {refillStatus && (
+            <div className="mt-2">
+              <strong>Refill Status:</strong> {refillStatus.status}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

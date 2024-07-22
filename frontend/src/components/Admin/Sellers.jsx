@@ -5,19 +5,21 @@ import { MdEditSquare } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import axios from "axios";
 import config from "../../config";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserBalance } from "../../features/servicesSlice";
 
 const apiUrl = config.apiBaseUrl;
-const data = [
-  { id: 1, provider: "SMM Panel-1", balance: "20" },
-  { id: 2, provider: "SMM Panel-2", balance: "10" },
-];
-
 const Sellers = () => {
   const [isProviderOpen, setIsProviderOpen] = useState(false);
   const [inputApiUrl, setInputApiUrl] = useState("");
   const [inputApiKey, setInputApiKey] = useState("");
   const [selectedOption, setSelectedOption] = useState("No");
+  const[provider, setProvider] = 
   const closeOutClick = useRef(null);
+  const dispatch = useDispatch();
+  const balance = useSelector((state) => state.services);
+  console.log(balance);
+
   const handleApiUrlChange = (e) => {
     setInputApiUrl(e.target.value);
   };
@@ -68,6 +70,10 @@ const Sellers = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    dispatch(getUserBalance());
+  }, [dispatch]);
 
   return (
     <>
@@ -219,22 +225,31 @@ const Sellers = () => {
             </tr>
           </thead>
           <tbody className="divide-y">
-            {data.map((item) => (
-              <tr key={item.id} className="hover:bg-gray-100">
-                <td className="px-6 py-3 whitespace-nowrap text-sm text-foreground">
-                  {item.provider}
-                </td>
-                <td className="px-6 py-3 whitespace-nowrap text-sm text-foreground">
-                  {item.balance}
-                </td>
-                <td className="px-6 py-3 whitespace-nowrap text-sm text-foreground">
-                  <button className="flex items-center gap-x-1">
-                    <MdEditSquare className="size-5 text-primary" />
-                    <MdDelete className="size-5 text-destructive" />
-                  </button>
-                </td>
-              </tr>
-            ))}
+            <tr className="hover:bg-gray-100">
+              <td className="px-6 py-3 whitespace-nowrap text-sm text-foreground">
+                {inputApiUrl}
+              </td>
+              <td className="px-6 py-3 whitespace-nowrap text-sm text-foreground">
+                {Object.keys(balance).map((key) => {
+                  const item = balance[key];
+
+                  return (
+                    <div
+                      className="text-foreground flex gap-x-1 items-center"
+                      key={key}
+                    >
+                      <p> {item.balance}</p> <p>{item.currency}</p>
+                    </div>
+                  );
+                })}
+              </td>
+              <td className="px-6 py-3 whitespace-nowrap text-sm text-foreground">
+                <button className="flex items-center gap-x-1">
+                  <MdEditSquare className="size-5 text-primary" />
+                  <MdDelete className="size-5 text-destructive" />
+                </button>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
