@@ -14,7 +14,6 @@ const Sellers = () => {
   const [inputApiUrl, setInputApiUrl] = useState("");
   const [inputApiKey, setInputApiKey] = useState("");
   const [selectedOption, setSelectedOption] = useState("No");
-  const[provider, setProvider] = 
   const closeOutClick = useRef(null);
   const dispatch = useDispatch();
   const balance = useSelector((state) => state.services);

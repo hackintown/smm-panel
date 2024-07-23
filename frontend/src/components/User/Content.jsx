@@ -1,11 +1,21 @@
 import React, { useState } from "react";
 import { FaUsers } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { addOrder, getOrderStatus, getUserBalance, createRefill } from "../../features/servicesSlice";
+import {
+  addOrder,
+  getOrderStatus,
+  getUserBalance,
+  createRefill,
+} from "../../features/servicesSlice";
 const Content = () => {
-  const { loading, error, selectedServices,  orderStatus, balance, refillStatus } = useSelector(
-    (state) => state.services
-  );
+  const {
+    loading,
+    error,
+    selectedServices,
+    orderStatus,
+    balance,
+    refillStatus,
+  } = useSelector((state) => state.services);
   const categories = Object.keys(selectedServices);
 
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -52,8 +62,8 @@ const Content = () => {
   };
 
   return (
-    <div className="mx-5">
-      <div className="border border-border bg-card p-4 flex items-center justify-between my-8 rounded-lg shadow-sm">
+    <div>
+      <div className="border border-border bg-card p-4 flex items-center justify-between rounded-lg mb-6 shadow-sm">
         <h2 className="text-card-foreground text-md font-semibold">
           Total Order
         </h2>

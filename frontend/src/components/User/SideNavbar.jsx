@@ -123,10 +123,12 @@ const SideNavbar = ({
         </li>
         {menuItems.map((item) => {
           const IconComponent = dynamicIconMap[item.icon];
+          let path = item.path;
+          if (item.label === "Orders") path = "/dashboard/orders";
           return (
             <li key={`${item.id}- ${item.label}`} className="mb-2">
               <NavLink
-                to={item.path}
+                to={path}
                 isActive={() => item.path === location.pathname}
                 className={`flex items-center py-2 px-3 rounded-lg w-full text-lg ${
                   item.path === location.pathname

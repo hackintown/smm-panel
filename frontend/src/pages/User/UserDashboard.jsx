@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Content from "../../components/User/Content";
 import UserNavbar from "../../components/User/UserNavbar";
 import SideNavbar from "../../components/User/SideNavbar";
+import { Outlet } from "react-router-dom";
 
 const UserDashboard = () => {
   const [mobileToggle, setMobileToggle] = useState(false);
@@ -35,8 +36,10 @@ const UserDashboard = () => {
             handleCurrencyChange={handleCurrencyChange}
           />
         </div>
-        <div className="flex-1 md:ml-[290px] mt-[60px] md:mt-0">
-          <Content />
+        <div className="flex-1 md:ml-[290px] mt-[60px] md:mt-10">
+          <div className="mx-5">
+            <Outlet />
+          </div>
         </div>
       </div>
     </>

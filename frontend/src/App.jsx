@@ -30,6 +30,8 @@ import Sellers from "./components/Admin/Sellers";
 import GeneralSetting from "./components/Admin/GeneralSetting";
 import PaymentMethod from "./components/Admin/PaymentMethod";
 import ApiServices from "./pages/Admin/ApiServices";
+import UserOrder from "./pages/User/UserOrder";
+import Content from "./components/User/Content";
 const Loading = () => <p>Loading...</p>;
 
 const UserRoutes = ({ user, role }) =>
@@ -73,7 +75,11 @@ const App = () => {
           <Route
             path="/dashboard"
             element={<UserRoutes user={user} role={role} />}
-          />
+          >
+            <Route index element={<Content />} />
+            <Route path="orders" element={<UserOrder />} />
+          </Route>
+          <Route path="/dashboard/orders" element={<UserOrder />} />
           <Route path="/admin/settings/*" element={<Settings />}>
             <Route index element={<GeneralSetting />} />
             <Route path="general-settings" element={<GeneralSetting />} />

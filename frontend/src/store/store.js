@@ -8,7 +8,7 @@ import servicesReducer from "../features/servicesSlice";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth", "sideNavbar", "services"],
+  whitelist: ["auth", "sideNavbar", "services"], // store the entire services state
 };
 
 const rootReducer = combineReducers({
