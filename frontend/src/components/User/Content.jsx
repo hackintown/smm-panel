@@ -71,16 +71,6 @@ const Content = () => {
           <FaUsers size={20} /> 100
         </button>
       </div>
-      {loading && (
-        <div className="flex justify-center">
-          <div
-            className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full"
-            role="status"
-          >
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        </div>
-      )}
       <div className="rounded-lg shadow-lg border border-border w-full max-w-[950px] bg-card py-2">
         <form onSubmit={handleNewOrder}>
           <ul className="p-5 flex flex-col gap-y-4">
