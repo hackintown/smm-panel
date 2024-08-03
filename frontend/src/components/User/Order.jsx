@@ -1,71 +1,39 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import { getOrderStatus } from "../../features/servicesSlice";
 
 const Order = () => {
-  const data = [
-    { id: 1, name: "John Doe", email: "john@example.com", role: "Admin" },
-    { id: 2, name: "Jane Smith", email: "jane@example.com", role: "User" },
-    {
-      id: 3,
-      name: "Alice Johnson",
-      email: "alice@example.com",
-      role: "Editor",
-    },
-    { id: 4, name: "Bob Brown", email: "bob@example.com", role: "Subscriber" },
-  ];
+  const { loading, error, orderStatus } = useSelector((state) => state.services);
+
+  if (!orderStatus) return null; // Handle case where orderStatus is null or undefined
+
   return (
     <div className="overflow-x-auto p-6">
-      <table className="min-w-full bg-card border border-border rounded-lg shadow-md">
-        <thead>
-          <tr className="bg-primary text-white">
-            <th className="py-3 px-6 text-left text-primary-foreground">ID</th>
-            <th className="py-3 px-6 text-left text-primary-foreground">
-              Date
-            </th>
-            <th className="py-3 px-6 text-left text-primary-foreground">
-              Link
-            </th>
-            <th className="py-3 px-6 text-left text-primary-foreground">
-              Charge
-            </th>
-            <th className="py-3 px-6 text-left text-primary-foreground">
-              Start Count
-            </th>
-            <th className="py-3 px-6 text-left text-primary-foreground">
-              Quantity
-            </th>
-            <th className="py-3 px-6 text-left text-primary-foreground">
-              Service Name
-            </th>
-            <th className="py-3 px-6 text-left text-primary-foreground">
-              Status
-            </th>
-            <th className="py-3 px-6 text-left text-primary-foreground">
-              Remains
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((item) => (
-            <tr
-              key={item.id}
-              className="border-b border-gray-200 hover:bg-gray-50"
-            >
-              <td className="py-4 px-6 text-foreground">{item.id}</td>
-              <td className="py-4 px-6 text-foreground">{item.name}</td>
-              <td className="py-4 px-6 text-foreground">{item.email}</td>
-              <td className="py-4 px-6 text-foreground">{item.role}</td>
-              <td className="py-4 px-6 text-foreground">
-                <button className="text-blue-500 hover:text-blue-700 mr-2">
-                  Edit
-                </button>
-                <button className="text-red-500 hover:text-red-700">
-                  Delete
-                </button>
-              </td>
+      <div className="mt-4 border border-gray-300 rounded-lg shadow-lg p-4 bg-white">
+        <h3 className="text-lg font-semibold text-gray-800 mb-4">
+          Order Status
+        </h3>
+        <table className="min-w-full bg-white border border-gray-300 rounded-lg">
+          <thead className="bg-gray-100 border-b border-gray-300">
+            <tr>
+              <th className="py-2 px-4 text-left text-gray-600 font-medium">Charge</th>
+              <th className="py-2 px-4 text-left text-gray-600 font-medium">Start Count</th>
+              <th className="py-2 px-4 text-left text-gray-600 font-medium">Status</th>
+              <th className="py-2 px-4 text-left text-gray-600 font-medium">Remains</th>
+              <th className="py-2 px-4 text-left text-gray-600 font-medium">Currency</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            <tr className="hover:bg-gray-50">
+              <td className="py-2 px-4 border-b border-gray-200 text-gray-700">{orderStatus.charge}</td>
+              <td className="py-2 px-4 border-b border-gray-200 text-gray-700">{orderStatus.start_count}</td>
+              <td className="py-2 px-4 border-b border-gray-200 text-gray-700">{orderStatus.status}</td>
+              <td className="py-2 px-4 border-b border-gray-200 text-gray-700">{orderStatus.remains}</td>
+              <td className="py-2 px-4 border-b border-gray-200 text-gray-700">{orderStatus.currency}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

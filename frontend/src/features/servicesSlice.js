@@ -85,6 +85,7 @@ const servicesSlice = createSlice({
     orderStatus: null,
     balance: null,
     refillStatus: null,
+    orderId: null, 
   },
   reducers: {
     setSelectedCategory: (state, action) => {
@@ -117,6 +118,7 @@ const servicesSlice = createSlice({
       .addCase(addOrder.fulfilled, (state, action) => {
         state.loading = false;
         state.orderCreated = true; // Set flag to indicate order creation
+        state.orderId = action.payload.order; // Store the new order ID
       })
       .addCase(addOrder.rejected, (state, action) => {
         state.loading = false;

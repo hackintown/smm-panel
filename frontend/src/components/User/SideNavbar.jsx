@@ -125,6 +125,7 @@ const SideNavbar = ({
           const IconComponent = dynamicIconMap[item.icon];
           let path = item.path;
           if (item.label === "Orders") path = "/dashboard/orders";
+          if (item.label === "New Order") path = "/dashboard";
           return (
             <li key={`${item.id}- ${item.label}`} className="mb-2">
               <NavLink
