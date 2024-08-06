@@ -7,7 +7,7 @@ import {
   getUserBalance,
   createRefill,
 } from "../../features/servicesSlice";
-const Content = () => {
+const Dashboard = () => {
   const { loading, error, selectedServices, balance, refillStatus, orderId } =
     useSelector((state) => state.services);
   const categories = Object.keys(selectedServices);
@@ -207,35 +207,9 @@ const Content = () => {
             </li>
           </ul>
         </form>
-        <div className="mt-5">
-          <button
-            onClick={handleGetUserBalance}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Check Balance
-          </button>
-          {balance && (
-            <div className="mt-2">
-              <strong>Balance:</strong> {balance.balance}
-            </div>
-          )}
-        </div>
-        <div className="mt-5">
-          <button
-            onClick={handleCreateRefill}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Create Refill
-          </button>
-          {refillStatus && (
-            <div className="mt-2">
-              <strong>Refill Status:</strong> {refillStatus.status}
-            </div>
-          )}
-        </div>
       </div>
     </div>
   );
 };
 
-export default Content;
+export default Dashboard;
