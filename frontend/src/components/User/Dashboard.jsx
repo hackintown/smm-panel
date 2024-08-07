@@ -7,7 +7,7 @@ import {
   getUserBalance,
   createRefill,
 } from "../../features/servicesSlice";
-const Content = () => {
+const Dashboard = () => {
   const { loading, error, selectedServices, balance, refillStatus, orderId } =
     useSelector((state) => state.services);
   const categories = Object.keys(selectedServices);
@@ -212,4 +212,4 @@ const Content = () => {
   );
 };
 
-export default Content;
+export default Dashboard;

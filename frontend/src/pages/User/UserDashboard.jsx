@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Content from "../../components/User/Content";
+import Content from "../../components/User/Dashboard";
 import UserNavbar from "../../components/User/UserNavbar";
 import SideNavbar from "../../components/User/SideNavbar";
 import { Outlet } from "react-router-dom";

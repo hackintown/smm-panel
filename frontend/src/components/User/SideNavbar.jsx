@@ -26,7 +26,7 @@ const SideNavbar = ({
   handleCurrencyChange,
   selectedCurrency,
 }) => {
-  const [activeItem, setActiveItem] = useState(2);
+  const [activeItem, setActiveItem] = useState(4);
   const [dynamicIconMap, setDynamicIconMap] = useState(iconMap);
   const menuItems = useSelector((state) => state.sideNavbar.menuItems);
   const location = useLocation(); // Get current location
@@ -46,6 +46,15 @@ const SideNavbar = ({
       }
     });
   }, [menuItems, dynamicIconMap]);
+
+  useEffect(() => {
+    const currentItem = menuItems.find(
+      (item) => item.path === location.pathname
+    );
+    if (currentItem) {
+      setActiveItem(currentItem.id);
+    }
+  }, [menuItems, location]);
 
   return (
     <div
@@ -126,6 +135,7 @@ const SideNavbar = ({
           let path = item.path;
           if (item.label === "Orders") path = "/dashboard/orders";
           if (item.label === "New Order") path = "/dashboard";
+          if (item.label === "Services") path = "/dashboard/services";
           return (
             <li key={`${item.id}- ${item.label}`} className="mb-2">
               <NavLink

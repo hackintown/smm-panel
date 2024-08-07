@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { IoLogOut } from "react-icons/io5";
 import { FaAngleDown } from "react-icons/fa6";
@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../features/authSlice";
+import axios from "axios";
 
 const UserNavbar = ({
   handleToggleMenu,
@@ -19,10 +20,36 @@ const UserNavbar = ({
   const { darkMode, toggleTheme } = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [exchangeRate, setExchangeRate] = useState(1);
+  const [walletBalance, setWalletBalance] = useState(84); // Example wallet balance in INR
   const handleLogout = () => {
     dispatch(logout());
     navigate("/login");
   };
+
+  useEffect(() => {
+    const fetchExchangeRate = async () => {
+      try {
+        const response = await axios.get(
+          "https://v6.exchangerate-api.com/v6/de31127b3cb0ec8b1f613481/latest/INR"
+        );
+        const rate = response.data.conversion_rates.USD;
+        setExchangeRate(rate);
+      } catch (error) {
+        console.error("Error fetching the exchange rate:", error);
+      }
+    };
+
+    fetchExchangeRate();
+  }, []);
+
+  const handleCurrencySwitch = (currency) => {
+    handleCurrencyChange(currency);
+  };
+
+  const convertedBalance =
+    selectedCurrency === "INR" ? walletBalance : walletBalance * exchangeRate;
+
   return (
     <nav className="bg-background border-b border-b-border relative">
       <div className="flex flex-wrap items-center justify-between px-4 py-4">
@@ -87,6 +114,13 @@ const UserNavbar = ({
                   </div>
                 </MenuItems>
               </Menu>
+            </li>
+            <li className="flex items-center">
+              <span className="mr-2">Wallet:</span>
+              <span className="font-semibold">
+                {selectedCurrency === "INR" ? "₹" : "$"}{" "}
+                {convertedBalance.toFixed(2)}
+              </span>
             </li>
             <li>
               <button
