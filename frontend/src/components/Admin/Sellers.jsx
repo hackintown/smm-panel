@@ -237,7 +237,7 @@ const Sellers = () => {
                       className="text-foreground flex gap-x-1 items-center"
                       key={key}
                     >
-                      <p> {item.balance}</p> <p>{item.currency}</p>
+                      <p> {item?.balance}</p> <p>{item?.currency}</p>
                     </div>
                   );
                 })}
