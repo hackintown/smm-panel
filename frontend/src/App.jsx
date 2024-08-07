@@ -33,6 +33,7 @@ import ApiServices from "./pages/Admin/ApiServices";
 import UserOrder from "./pages/User/UserOrder";
 import UserServices from "./components/User/Services/UserServices";
 import Dashboard from "./components/User/Dashboard";
+import AddFundPage from "./pages/User/AddFundPage";
 const Loading = () => <p>Loading...</p>;
 
 const UserRoutes = ({ user, role }) =>
@@ -80,6 +81,7 @@ const App = () => {
             <Route index element={<Dashboard />} />
             <Route path="orders" element={<UserOrder />} />
             <Route path="services" element={<UserServices />} />
+            <Route path="add-funds" element={<AddFundPage />} />
           </Route>
           <Route path="/dashboard/orders" element={<UserOrder />} />
           <Route path="/admin/settings/*" element={<Settings />}>

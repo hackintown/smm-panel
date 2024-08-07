@@ -136,6 +136,7 @@ const SideNavbar = ({
           if (item.label === "Orders") path = "/dashboard/orders";
           if (item.label === "New Order") path = "/dashboard";
           if (item.label === "Services") path = "/dashboard/services";
+          if (item.label === "Add Funds") path = "/dashboard/add-funds";
           return (
             <li key={`${item.id}- ${item.label}`} className="mb-2">
               <NavLink
