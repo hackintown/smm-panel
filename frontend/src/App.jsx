@@ -34,7 +34,6 @@ import UserOrder from "./pages/User/UserOrder";
 import UserServices from "./components/User/Services/UserServices";
 import Dashboard from "./components/User/Dashboard";
 import AddFundPage from "./pages/User/AddFundPage";
-const Loading = () => <p>Loading...</p>;
 
 const UserRoutes = ({ user, role }) =>
   user && role === "user" ? (
@@ -51,7 +50,7 @@ const AdminRoutes = ({ user, role }) =>
   );
 
 const App = () => {
-  const { user, role, loading } = useSelector((state) => state.auth);
+  const { user, role} = useSelector((state) => state.auth);
   const location = useLocation();
 
   const isAdminPath = location.pathname.startsWith("/admin");
@@ -62,51 +61,47 @@ const App = () => {
     <>
       {!isAdminPath && !isAdminLoginPage && <Navbar />}
       {isAdminPath && !isAdminLoginPage && <AdminNavbar />}
-      {loading ? (
-        <Loading />
-      ) : (
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/admin" element={<AdminLogin />} />
-          <Route
-            path="/admin/dashboard"
-            element={<AdminRoutes user={user} role={role} />}
-          />
-          <Route
-            path="/dashboard"
-            element={<UserRoutes user={user} role={role} />}
-          >
-            <Route index element={<Dashboard />} />
-            <Route path="orders" element={<UserOrder />} />
-            <Route path="services" element={<UserServices />} />
-            <Route path="add-funds" element={<AddFundPage />} />
-          </Route>
-          <Route path="/dashboard/orders" element={<UserOrder />} />
-          <Route path="/admin/settings/*" element={<Settings />}>
-            <Route index element={<GeneralSetting />} />
-            <Route path="general-settings" element={<GeneralSetting />} />
-            <Route path="sellers" element={<Sellers />} />
-            <Route path="payment-methods" element={<PaymentMethod />} />
-          </Route>
-          <Route path="/admin/clients" element={<Clients />} />
-          <Route path="/admin/orders" element={<Order />} />
-          <Route path="/admin/services" element={<Services />} />
-          <Route path="/admin/tickets" element={<Ticket />} />
-          <Route path="/admin/appearance" element={<Appearance />} />
-          <Route path="/admin/owner" element={<Owner />} />
-          <Route path="/admin/accounts" element={<Account />} />
-          <Route path="/admin/tasks" element={<Task />} />
-          <Route path="/admin/update-price" element={<UpdatePrice />} />
-          <Route path="/admin/category-sort" element={<CategorySort />} />
-          <Route path="/admin/api-services" element={<ApiServices />} />
-          {isAdminLoginPage && (
-            <Route path="/admin/login" element={<AdminLogin />} />
-          )}
-          <Route path="/admin/*" element={<Error404 />} />
-        </Routes>
-      )}
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/admin" element={<AdminLogin />} />
+        <Route
+          path="/admin/dashboard"
+          element={<AdminRoutes user={user} role={role} />}
+        />
+        <Route
+          path="/dashboard"
+          element={<UserRoutes user={user} role={role} />}
+        >
+          <Route index element={<Dashboard />} />
+          <Route path="orders" element={<UserOrder />} />
+          <Route path="services" element={<UserServices />} />
+          <Route path="add-funds" element={<AddFundPage />} />
+        </Route>
+        <Route path="/dashboard/orders" element={<UserOrder />} />
+        <Route path="/admin/settings/*" element={<Settings />}>
+          <Route index element={<GeneralSetting />} />
+          <Route path="general-settings" element={<GeneralSetting />} />
+          <Route path="sellers" element={<Sellers />} />
+          <Route path="payment-methods" element={<PaymentMethod />} />
+        </Route>
+        <Route path="/admin/clients" element={<Clients />} />
+        <Route path="/admin/orders" element={<Order />} />
+        <Route path="/admin/services" element={<Services />} />
+        <Route path="/admin/tickets" element={<Ticket />} />
+        <Route path="/admin/appearance" element={<Appearance />} />
+        <Route path="/admin/owner" element={<Owner />} />
+        <Route path="/admin/accounts" element={<Account />} />
+        <Route path="/admin/tasks" element={<Task />} />
+        <Route path="/admin/update-price" element={<UpdatePrice />} />
+        <Route path="/admin/category-sort" element={<CategorySort />} />
+        <Route path="/admin/api-services" element={<ApiServices />} />
+        {isAdminLoginPage && (
+          <Route path="/admin/login" element={<AdminLogin />} />
+        )}
+        <Route path="/admin/*" element={<Error404 />} />
+      </Routes>
     </>
   );
 };
